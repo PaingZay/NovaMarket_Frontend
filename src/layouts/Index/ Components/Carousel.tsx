@@ -1,24 +1,20 @@
 import React from "react";
 import {CarouselProduct} from "./CaruoselProduct";
 import { useEffect,useState } from "react";
-// import CustomerModel from "../../../Models/CustomerModel";
-import BookModel from "../../../Models/BookModel";
+import CustomerModel from "../../../Models/CustomerModel";
+//import BookModel from "../../../Models/BookModel";
 
 
 
 function Carousel() {
 
-    // const [customers, setCustomers] = useState<CustomerModel[]>([]);
-    // const [isLoading, setIsLoading] = useState(true);
-    // const [httpError, setHttpError] = useState(null);
-
-    const [books, setBooks] = useState<BookModel[]>([]);
+    const [books, setBooks] = useState<CustomerModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
 
     useEffect(() => {
         const fetchBooks = async () => {
-            const baseUrl: string = "http://localhost:8080/api/books";
+            const baseUrl: string = "http://localhost:8081/api/users";
 
             const url: string = `${baseUrl}?page=0&size=9`;
 
@@ -30,20 +26,37 @@ function Carousel() {
 
             const responseJson = await response.json();
 
-            const responseData = responseJson._embedded.books;
+            if(responseJson != null)
+            console.log(responseJson);
+            else
+            console.log("No data");
 
-            const loadedBooks: BookModel[] = [];
+            const responseData = responseJson;
+
+            const loadedBooks: CustomerModel[] = [];
 
             for (const key in responseData) {
                 loadedBooks.push({
+                    // id: responseData[key].id,
+                    // title: responseData[key].title,
+                    // author: responseData[key].author,
+                    // description: responseData[key].description,
+                    // copies: responseData[key].copies,
+                    // copiesAvailable: responseData[key].copiesAvailable,
+                    // category: responseData[key].category,
+                    // img: responseData[key].img,
+
                     id: responseData[key].id,
-                    title: responseData[key].title,
-                    author: responseData[key].author,
-                    description: responseData[key].description,
-                    copies: responseData[key].copies,
-                    copiesAvailable: responseData[key].copiesAvailable,
-                    category: responseData[key].category,
-                    img: responseData[key].img,
+                    address: responseData[key].address,
+                    city: responseData[key].city,
+                    dateOfBirth: responseData[key].dateOfBirth,
+                    email:responseData[key].email,
+                    firstName: responseData[key].firstName,
+                    lastName: responseData[key].lastName,
+                    password: responseData[key].password,
+                    phoneNumber: responseData[key].phoneNumber,
+                    state: responseData[key].state,
+                    zipCode: responseData[key].zipCode,
                 });
             }
 
