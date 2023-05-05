@@ -1,22 +1,24 @@
 import React from "react";
 import {CarouselProduct} from "./CaruoselProduct";
 import { useEffect,useState } from "react";
-import CustomerModel from "../../../Models/CustomerModel";
-//import BookModel from "../../../Models/BookModel";
+//import CustomerModel from "../../../Models/CustomerModel";
+import ProductModel from "../../../Models/ProductModel";
+// import CartModel from "../../../Models/CartModel";
 
 
 
 function Carousel() {
 
-    const [books, setBooks] = useState<CustomerModel[]>([]);
+    // const [products, setProducts] = useState<ProductModel[]>([]);\
+    const [products, setProducts] = useState<ProductModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
 
     useEffect(() => {
-        const fetchBooks = async () => {
-            const baseUrl: string = "http://localhost:8081/api/users";
+        const fetchProducts = async () => {
+            const baseUrl: string = "http://localhost:8081/api/products";
 
-            const url: string = `${baseUrl}?page=0&size=9`;
+            const url: string = `${baseUrl}?pageSize=6&pageNumber=0`;
 
             const response = await fetch(url);
 
@@ -31,39 +33,71 @@ function Carousel() {
             else
             console.log("No data");
 
-            const responseData = responseJson;
+            const responseData = responseJson.content;
 
-            const loadedBooks: CustomerModel[] = [];
+            console.log(responseData);
+
+            const loadedProducts: ProductModel[] = [];
 
             for (const key in responseData) {
-                loadedBooks.push({
-                    // id: responseData[key].id,
-                    // title: responseData[key].title,
-                    // author: responseData[key].author,
-                    // description: responseData[key].description,
-                    // copies: responseData[key].copies,
-                    // copiesAvailable: responseData[key].copiesAvailable,
-                    // category: responseData[key].category,
-                    // img: responseData[key].img,
+            const product: ProductModel = new ProductModel(
 
-                    id: responseData[key].id,
-                    address: responseData[key].address,
-                    city: responseData[key].city,
-                    dateOfBirth: responseData[key].dateOfBirth,
-                    email:responseData[key].email,
-                    firstName: responseData[key].firstName,
-                    lastName: responseData[key].lastName,
-                    password: responseData[key].password,
-                    phoneNumber: responseData[key].phoneNumber,
-                    state: responseData[key].state,
-                    zipCode: responseData[key].zipCode,
-                });
+                responseData[key].id,
+                responseData[key].productName,
+                responseData[key].description,
+                responseData[key].categoryId,
+                responseData[key].price,
+                responseData[key].discountPrice,
+                responseData[key].manufacturer,
+                responseData[key].imageUrl,
+                responseData[key].weight,
+                responseData[key].dimension
+                
+            );
+            loadedProducts.push(product);
             }
 
-            setBooks(loadedBooks);
+
+
+            
+
+            /*
+            loadedBooks array of type CartModel[]. Inside the for...in loop, we create a new CartModel object named cart, passing in the appropriate properties from responseData.
+            For the customer property of the CartModel, we create a new CustomerModel object with the appropriate properties from responseData[key].customer.
+            We then push the cart object into the loadedBooks array. Note that this assumes that the properties of the CustomerModel class match the properties of the customer object in responseData.
+            You may need to adjust the property names as needed based on the structure of your data.
+            */
+
+            //const loadedBooks: CartModel[] = [];
+
+            // for (const key in responseData) {
+            // const cart: CartModel = new CartModel(
+            //     responseData[key].id,
+            //     new CustomerModel(
+            //     responseData[key].customer.id,
+            //     responseData[key].customer.address,
+            //     responseData[key].customer.city,
+            //     responseData[key].customer.dateOfBirth,
+            //     responseData[key].customer.email,
+            //     responseData[key].customer.firstName,
+            //     responseData[key].customer.lastName,
+            //     responseData[key].customer.password,
+            //     responseData[key].customer.phoneNumber,
+            //     responseData[key].customer.state,
+            //     responseData[key].customer.zipCode
+            //     ),
+            //     responseData[key].createdDate,
+            //     responseData[key].status
+            // );
+            // loadedBooks.push(cart);
+            // }
+
+            console.log(responseData);
+
+            setProducts(loadedProducts);
             setIsLoading(false);
         };
-        fetchBooks().catch((error: any) => {
+        fetchProducts().catch((error: any) => {
             setIsLoading(false);
             setHttpError(error.message);
         })
@@ -88,7 +122,7 @@ function Carousel() {
     return (
         <div className="container mt-5" style={{height:550}}>
             <div className="homepage-carousel-title">
-                <h3>Find your next "I stayed up too late reading" book.</h3>
+                <h3>Find your next "I stayed up too late reading" product.</h3>
             </div>
             <div id="carouselExampleControls" className="carousel carousel-dark slide mt-5
             d-none d-lg-block" data-bs-interval='false'>
@@ -97,27 +131,21 @@ function Carousel() {
                 <div className='carousel-inner'>
                     <div className='carousel-item active'>
                         <div className='row d-flex justify-content-center align-items-center'>
-                            {/* {
-                                customers.slice(0,3).map(customer => (
-                                    
-                                    <CarouselProduct customer = {customer} key ={customer.id} />
-                                ))
-                            } */}
                             {
-                                books.slice(0,3).map(book => (
-                                    
-                                    <CarouselProduct book = {book} key ={book.id} />
-                                ))
+                                
+                                products.slice(0,3).map(product => (
+                                    <CarouselProduct product = {product} key ={product.id} />
+                                ))                                
                             }
                         </div>
                     </div>
                     <div className='carousel-item'>
                         <div className='row d-flex justify-content-center align-items-center'>
-                            {/* {
-                                customers.slice(3,6).map(customer => (
-                                    <CarouselProduct customer = {customer} key ={customer.id} />
-                                ))
-                            } */}
+                            {
+                                products.slice(3,6).map(product => (
+                                    <CarouselProduct product = {product} key ={product.id} />
+                                ))    
+                            }
                         </div>
                     </div>
                     <div className='carousel-item'>
@@ -156,3 +184,5 @@ function Carousel() {
 }
 
 export default Carousel;
+
+// create a nested loop outer loop runs 3 times and inner loops runs 10 times
