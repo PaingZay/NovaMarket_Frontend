@@ -3,6 +3,7 @@ import {CarouselProduct} from "./CaruoselProduct";
 import { useEffect,useState } from "react";
 //import CustomerModel from "../../../Models/CustomerModel";
 import ProductModel from "../../../Models/ProductModel";
+import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 // import CartModel from "../../../Models/CartModel";
 
 
@@ -59,7 +60,7 @@ function Carousel() {
 
 
 
-            
+
 
             /*
             loadedBooks array of type CartModel[]. Inside the for...in loop, we create a new CartModel object named cart, passing in the appropriate properties from responseData.
@@ -103,13 +104,13 @@ function Carousel() {
         })
     }, []);
 
-        if(isLoading) {
-            return(
-                <div className="container m-5">
-                    <p>Loading...</p>
-                </div>
-            )
-        }
+    if(isLoading) {
+        return(
+            <div className="container m-5">
+                <SpinnerLoading/>
+            </div>
+        )
+    }
 
     if(httpError) {
         return(
