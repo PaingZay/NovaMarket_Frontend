@@ -29,44 +29,62 @@ function SearchProductPage(){
                 url = baseUrl + searchUrl;
             }
 
+            
+
+            let responseJson;
+
             const response = await fetch(url);
 
             if (!response.ok) {
                 throw new Error('Something went wrong!');
             }
 
-            const responseJson = await response.json();
+            try {
 
-            const responseData = responseJson.content;
+                responseJson = await response.json();
 
-            setTotalAmountOfProducts(responseJson.totalElements);
-            setTotalPages(responseJson.totalPages);
-
-            const loadedProducts: ProductModel[] = [];
-
-            for (const key in responseData) {
-            const product: ProductModel = new ProductModel(
-
-                responseData[key].id,
-                responseData[key].productName,
-                responseData[key].description,
-                responseData[key].categoryId,
-                responseData[key].price,
-                responseData[key].discountPrice,
-                responseData[key].manufacturer,
-                responseData[key].imageUrl,
-                responseData[key].weight,
-                responseData[key].dimension
+                    if (responseJson.length === 0) {
+                        throw new Error('No data found!');
+                    }
                 
-            );
-            loadedProducts.push(product);
+                const responseData = responseJson.content;
+
+                setTotalAmountOfProducts(responseJson.totalElements);
+                setTotalPages(responseJson.totalPages);
+
+                const loadedProducts: ProductModel[] = [];
+
+                for (const key in responseData) {
+                const product: ProductModel = new ProductModel(
+
+                    responseData[key].id,
+                    responseData[key].productName,
+                    responseData[key].description,
+                    responseData[key].categoryId,
+                    responseData[key].price,
+                    responseData[key].discountPrice,
+                    responseData[key].manufacturer,
+                    responseData[key].imageUrl,
+                    responseData[key].weight,
+                    responseData[key].dimension
+                    
+                );
+                loadedProducts.push(product);
+                }
+
+                setProducts(loadedProducts);
+                setIsLoading(false);
+            
             }
 
-            console.log(responseData);
-
-            setProducts(loadedProducts);
-            setIsLoading(false);
-        };
+            catch (error) {
+                const loadedProducts: ProductModel[] = [];
+                setTotalAmountOfProducts(0);
+                setTotalPages(0);
+            };
+        
+        } 
+        
         fetchProducts().catch((error: any) => {
             setIsLoading(false);
             setHttpError(error.message);
@@ -85,7 +103,7 @@ function SearchProductPage(){
     if(httpError) {
         return(
             <div className="container m-5">
-                <p>{httpError}</p>
+                <p>{httpError} Connection Error</p>
             </div>
         )
     }
@@ -162,7 +180,9 @@ function SearchProductPage(){
                             </div>
                         </div>
                     </div>
-                    <div>
+                    {totalAmountOfProducts > 0 ?
+                    <>
+                    <div className="mt-3">
                     <h5>Number of results: ({totalAmountOfProducts})</h5>
                     </div>
                     <p>
@@ -175,6 +195,17 @@ function SearchProductPage(){
                             <SearchProduct product = {product} key={product.id}/>
                         ))
                     }
+                    </>
+                    :
+                    <div className='m-5'>
+                        <h3>
+                            Can't find what you are looking for?
+                        </h3>
+                        <a type='button' className='btn main-color btn-md px-4 me-md-2 fw-bold text-white'
+                            href='#'>Library Services</a>
+                    </div>
+                    }
+
                     {totalPages > 1 && 
                         <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
                     }
