@@ -15,7 +15,7 @@ function SearchProductPage(){
     const [totalPages, setTotalPages] = useState(0);
     const [search, setSearch] = useState('');
     const [searchUrl, setSearchUrl] = useState('');
-    
+    const [categorySelection, setCategorySelection] = useState('Product Category');
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -26,7 +26,10 @@ function SearchProductPage(){
             if(searchUrl == '') {
                 url = `${baseUrl}?pageSize=${productsPerPage}&pageNumber=${currentPage-1}`;
             } else {
-                url = baseUrl + searchUrl;
+                //Prevent page refresh
+                //Replace <pageNumber> in searchUrl with currntPage - 1 because page number is similar to array.
+                let searchWithPage = searchUrl.replace('<pgn>', `${currentPage - 1}`);
+                url = baseUrl + searchWithPage;
             }
 
             
@@ -109,11 +112,31 @@ function SearchProductPage(){
     }
 
     const searchHandleChange = () => {
+        setCurrentPage(1);
         if(search == '') {
             setSearchUrl('');
         } else {
             //setSearchUrl(`/search/findByTitleContaining?title=${search}&pageNumber=0&pageSize=${productsPerPage}`)
-            setSearchUrl(`/${search}?pageNumber=0&pageSize=${productsPerPage}`)
+            setSearchUrl(`/${search}?pageNumber=<pgn>&pageSize=${productsPerPage}`)
+        }
+        setCategorySelection('Book Category')
+    }
+
+    const categoryField = (value: string) => {
+        setCurrentPage(1);
+        if( value.toLowerCase() === 'mondstadt' ||
+            value.toLowerCase() === 'liyue' ||
+            value.toLowerCase() === 'inazuma' ||
+            value.toLowerCase() === 'sumeru' ||
+            value.toLowerCase() === 'fontaine' ||
+            value.toLowerCase() === 'natlan' ||
+            value.toLowerCase() === 'snezhnaya'
+        ) {
+            setCategorySelection(value);
+            setSearchUrl(`/category/${value}?pageNumber=<pgn>&pageSize=${productsPerPage}`)
+        } else {
+            setCategorySelection('All');
+            setSearchUrl(`?pageNumber=<pgn>&pageSize=${productsPerPage}`)
         }
     }
 
@@ -143,37 +166,47 @@ function SearchProductPage(){
                                 <button className='btn btn-secondary dropdown-toggle' type='button'
                                     id='dropdownMenuButton1' data-bs-toggle='dropdown'
                                     aria-expanded='false'>
-                                    Category
+                                    {categorySelection}
                                 </button>
                                 <ul className='dropdown-menu' aria-labelledby='dropdownMenuButton1'>
-                                    <li>
+                                    <li onClick={() => categoryField('All')}>
                                         <a className='dropdown-item' href='#'>
                                             All
                                         </a>
                                     </li>
-                                    <li>
+                                    <li onClick={() => categoryField('Mondstadt')}>
                                         <a className='dropdown-item' href='#'>
-                                            Sword
+                                            Mondstadt
                                         </a>
                                     </li>
-                                    <li>
+                                    <li onClick={() => categoryField('Liyue')}>
                                         <a className='dropdown-item' href='#'>
-                                            Claymore
+                                            Liyue
                                         </a>
                                     </li>
-                                    <li>
+                                    <li onClick={() => categoryField('Inazuma')}>
                                         <a className='dropdown-item' href='#'>
-                                            Catalyst
+                                            Inazuma
                                         </a>
                                     </li>
-                                    <li>
+                                    <li onClick={() => categoryField('Sumeru')}>
                                         <a className='dropdown-item' href='#'>
-                                            Bow
+                                            Sumeru
                                         </a>
                                     </li>
-                                    <li>
+                                    <li onClick={() => categoryField('Fontaine')}>
                                         <a className='dropdown-item' href='#'>
-                                            Polearm
+                                            Fontaine
+                                        </a>
+                                    </li>
+                                    <li onClick={() => categoryField('Natlan')}>
+                                        <a className='dropdown-item' href='#'>
+                                            Natlan
+                                        </a>
+                                    </li>
+                                    <li onClick={() => categoryField('Snezhnaya')}>
+                                        <a className='dropdown-item' href='#'>
+                                            Snezhnaya
                                         </a>
                                     </li>
                                 </ul>
@@ -188,7 +221,7 @@ function SearchProductPage(){
                     <p>
                         {indexOfFirstProduct + 1} to {lastItem} of {totalAmountOfProducts} items:
                         {/* let lastItem = productsPerPage * currentPage <= totalAmountOfProducts ? */}
-                        <h1>{totalAmountOfProducts}</h1>
+                        {/* <h1>{totalAmountOfProducts}</h1> */}
                     </p>
                     {
                         products.map(product => (
