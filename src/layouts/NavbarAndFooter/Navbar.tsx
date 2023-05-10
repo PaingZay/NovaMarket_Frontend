@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 function Navbar () {
     return (
@@ -15,12 +16,10 @@ function Navbar () {
         <div className='collapse navbar-collapse' id='navbarNavDropdown'>
           <ul className='navbar-nav'>
             <li className='nav-item'>
-              <a href="#" className='nav-link'>Index</a>
-              {/* <NavLink className='nav-link' to='/home'>Home</NavLink> */}
+              <NavLink href="#" className='nav-link' to='/home'>Index</NavLink>
             </li>
             <li className='nav-item'>
-            <a href="#" className='nav-link'>Search Products</a>
-              {/* <NavLink className='nav-link' to='/search'>Search Books</NavLink> */}
+              <NavLink className='nav-link' to='/search'>Search Products</NavLink>
             </li>
             {/* {authState.isAuthenticated && */}
               <li className='nav-item'>
