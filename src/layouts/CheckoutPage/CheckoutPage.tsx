@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import ProductModel from "../../Models/ProductModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import { StarsReview } from "../Utils/StarsReview";
+import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
 
 export const CheckoutPage = () => {
 
@@ -45,6 +47,7 @@ export const CheckoutPage = () => {
                 description: responseJson.description,
                 categoryId: responseJson.categoryId,
                 price: responseJson.price,
+                sku: responseJson.sku,
                 discountPrice:responseJson.discountPrice,
                 manufacturer:responseJson.manufacturer,
                 imageUrl:responseJson.imageUrl,
@@ -93,13 +96,16 @@ export const CheckoutPage = () => {
                     <div className="col-4 col-md-4 container">
                         <div className="ml-2">
                             <h2>{product?.productName}</h2>
-                            <h5 className="text-primary">{product?.manufacturer}</h5>
+                            <h5 className="text-primary">{product?.sku}</h5>
                             <p className="lead">{product?.description}</p>
+                            <StarsReview rating={3.5} size={25}/>
                         </div>
                     </div>
+                    <CheckoutAndReviewBox product={product} mobile={false}/>
                 </div>
                 <hr />
             </div>
+            
             <div className="container d-lg-none mt-5">
                 <div className="d-flex justify-content-center align-items-center">
                     {product?.imageUrl ?
@@ -110,13 +116,16 @@ export const CheckoutPage = () => {
                         <img src="https://www.kindpng.com/picc/m/421-4212275_transparent-default-avatar-png-avatar-img-png-download.png" width='200' height='200' alt="Product" />
                     }
                 </div>
+                
                 <div className="mt-4">
                     <div className="ml-2">
                         <h2>{product?.productName}</h2>
                         <h5 className="text-primary">{product?.manufacturer}</h5>
                         <p className="lead">{product?.description}</p>
+                        <StarsReview rating={4} size={32}/>
                     </div>
                 </div>
+                <CheckoutAndReviewBox product={product} mobile={true}/>
                 <hr />
             </div>
         </div>

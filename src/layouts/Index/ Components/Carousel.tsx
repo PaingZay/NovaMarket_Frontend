@@ -49,6 +49,7 @@ function Carousel() {
                 responseData[key].description,
                 responseData[key].categoryId,
                 responseData[key].price,
+                responseData[key].sku,
                 responseData[key].discountPrice,
                 responseData[key].manufacturer,
                 responseData[key].imageUrl,
