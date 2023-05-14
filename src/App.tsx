@@ -4,11 +4,12 @@ import Navbar from './layouts/NavbarAndFooter/Navbar';
 import Footer from './layouts/NavbarAndFooter/Footer';
 import { HomePage } from './layouts/Index/HomePage';
 import SearchProductPage from './layouts/SearchProductsPage/SearchProductPage';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch} from 'react-router-dom';
 import { CheckoutPage } from './layouts/CheckoutPage/CheckoutPage';
 
 //Udemy
 export const App = () => {
+
   return (
     <div className='d-flex flex-column min-vh-100'>
     <Navbar/>

@@ -4,7 +4,7 @@ class CartModel {
 
     id: number;
     customer:{ 
-        id: number;
+        customerId: number;
         address?: string;
         city?: string;
         dateOfBirth?: Date;

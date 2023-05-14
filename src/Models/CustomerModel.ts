@@ -1,18 +1,18 @@
 class CustomerModel {
-    id: number;
-    address?: string;
-    city?: string;
-    dateOfBirth?: Date;
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-    password?: string;
-    phoneNumber?: string;
-    state?: string;
-    zipCode?: string;
+    customerId: number;
+    address: string;
+    city: string;
+    dateOfBirth: Date;
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    phoneNumber: string;
+    state: string;
+    zipCode: string;
 
-    constructor(id: number, address: string, city: string, dateOfBirth: Date, email: string, firstName: string, lastName: string, password: string, phoneNumber: string, state: string, zipCode: string){
-        this.id = id;
+    constructor(customerId: number, address: string, city: string, dateOfBirth: Date, email: string, firstName: string, lastName: string, password: string, phoneNumber: string, state: string, zipCode: string){
+        this.customerId = customerId;
         this.address = address;
         this.city = city;
         this.dateOfBirth = dateOfBirth;

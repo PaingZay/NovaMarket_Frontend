@@ -1,18 +1,18 @@
 class ProductModel{
-    id: number;
-    productName?: string;
-    description?: string;
-    categoryId?: number;
-    price?: number;
-    sku?: number;
-    discountPrice?: number;
-    manufacturer?: string;
-    imageUrl?: string;
-    weight?: number;
-    dimension?: string;
+    productId: number;
+    productName: string;
+    description: string;
+    categoryId: number;
+    price: number;
+    sku: number;
+    discountPrice: number;
+    manufacturer: string;
+    imageUrl: string;
+    weight: number;
+    dimension: string;
 
-    constructor(id:number, productName:string, description:string, categoryId:number, price:number, sku:number, discountPrice:number, manufacturer:string, imageUrl:string, weight:number, dimension:string){
-        this.id = id;
+    constructor(productId:number, productName:string, description:string, categoryId:number, price:number, sku:number, discountPrice:number, manufacturer:string, imageUrl:string, weight:number, dimension:string){
+        this.productId = productId;
         this.productName = productName;
         this.description = description;
         this.categoryId = categoryId;

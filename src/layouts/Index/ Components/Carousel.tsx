@@ -1,12 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {CarouselProduct} from "./CaruoselProduct";
-import { useEffect,useState } from "react";
-//import CustomerModel from "../../../Models/CustomerModel";
 import ProductModel from "../../../Models/ProductModel";
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import { Link } from "react-router-dom";
-// import CartModel from "../../../Models/CartModel";
-
 
 
 function Carousel() {
@@ -137,7 +133,7 @@ function Carousel() {
                             {
                                 
                                 products.slice(0,3).map(product => (
-                                    <CarouselProduct product = {product} key ={product.id} />
+                                    <CarouselProduct product = {product} key ={product.productId} />
                                 ))                                
                             }
                         </div>
@@ -146,7 +142,7 @@ function Carousel() {
                         <div className='row d-flex justify-content-center align-items-center'>
                             {
                                 products.slice(3,6).map(product => (
-                                    <CarouselProduct product = {product} key ={product.id} />
+                                    <CarouselProduct product = {product} key ={product.productId} />
                                 ))    
                             }
                         </div>

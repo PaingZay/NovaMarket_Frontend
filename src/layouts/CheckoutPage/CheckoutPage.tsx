@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import ProductModel from "../../Models/ProductModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
+import ReviewModel from "../../Models/ReviewModel";
+import CustomerModel from "../../Models/CustomerModel";
 import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
+import { LatestReviews } from "./latestReviews";
+
 
 export const CheckoutPage = () => {
 
@@ -14,6 +18,11 @@ export const CheckoutPage = () => {
     //Then take the third index because it is a path variable
     const productId = (window.location.pathname).split('/')[2];
 
+    
+
+    
+
+    
     useEffect(() => {
         const fetchProduct = async () => {
 
@@ -42,7 +51,7 @@ export const CheckoutPage = () => {
             //const loadedProducts: ProductModel[] = [];
 
             const loadedProduct: ProductModel = {
-                id: responseJson.id,
+                productId: responseJson.id,
                 productName: responseJson.productName,
                 description: responseJson.description,
                 categoryId: responseJson.categoryId,
@@ -64,7 +73,168 @@ export const CheckoutPage = () => {
         })
     }, []);
 
-    if(isLoading) {
+    const [reviews, setReviews] = useState<ReviewModel[]>([]);
+    const [totalStars, setTotalStars] = useState(0);
+    const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+
+
+    useEffect(() => {
+        const fetchProductReview = async () => {
+            const reviewBaseUrl: string = `http://localhost:8081/api/product/${productId}/reviews`;
+
+            //For paginition
+            const reviewUrl: string = `${reviewBaseUrl}?pageSize=2&pageNumber=0`;
+            //
+
+            const responseReview = await fetch(reviewUrl);
+
+            if (!responseReview.ok) {
+                throw new Error('Something went wrong!');
+            }
+
+            const responseJson = await responseReview.json();
+
+            const responseData = responseJson.content;
+
+            const loadedReviews: ReviewModel[] = [];
+
+            let weightedStarReviews: number = 0;
+
+            for(const key in responseData) {
+                const review: ReviewModel = new ReviewModel(
+                    responseData[key].id,
+                    responseData[key].reviewDate,
+                    responseData[key].reviewRating,
+                    responseData[key].reviewText,
+                    new CustomerModel(
+                            responseData[key].customer.id,
+                            responseData[key].customer.address,
+                            responseData[key].customer.city,
+                            responseData[key].customer.dateOfBirth,
+                            responseData[key].customer.email,
+                            responseData[key].customer.firstName,
+                            responseData[key].customer.lastName,
+                            responseData[key].customer.password,
+                            responseData[key].customer.phoneNumber,
+                            responseData[key].customer.state,
+                            responseData[key].customer.zipCode
+                            ),
+                    new ProductModel(
+                            responseData[key].product.id,
+                            responseData[key].product.productName,
+                            responseData[key].product.description,
+                            responseData[key].product.category.id,
+                            responseData[key].product.price,
+                            responseData[key].product.sku,
+                            responseData[key].product.discountPrice,
+                            responseData[key].product.manufacturer,
+                            responseData[key].product.imageUrl,
+                            responseData[key].product.weight,
+                            responseData[key].product.dimension
+                        )
+                    );
+                    
+                    loadedReviews.push(review);
+                    
+                    weightedStarReviews = weightedStarReviews + responseData[key].reviewRating;
+                    
+                }
+
+                if (loadedReviews) {
+                    const round = (Math.round((weightedStarReviews / loadedReviews.length) * 2) / 2).toFixed(1);
+                    setTotalStars(Number(round));
+                }
+
+                setReviews(loadedReviews);
+                
+                setIsLoadingReviews(false);
+
+            };
+
+            fetchProductReview().catch((error: any) => {
+                setIsLoadingReviews(false);
+                setHttpError(error.message);
+            })
+    }, []);
+
+    
+
+    // useEffect(() => {
+    //     const fetchProductReviews = async () => {
+    //         const baseUrl: string = `http://localhost:8081/api/product/${productId}/reviews`;
+    
+    //         const reviewUrl: string = `${baseUrl}?pageSize=3&pageNumber=0`;
+    
+    //         const responseReviews = await fetch(reviewUrl);
+    
+    //         if (!responseReviews.ok) {
+    //             throw new Error('Something went wrong!');
+    //         }
+    
+    //         const responseJsonReviews = await responseReviews.json();
+    
+    //         const responseData = responseJsonReviews.content;
+    
+    //         console.log(responseData[0]);
+    //         console.log(responseData[1]);
+    
+    //         const loadedReviews: ReviewModel[] = [];
+    
+    //         let weightedStarReviews: number = 0;
+    
+    //         for (const key in responseData) {
+    //             loadedReviews.push({
+    //                 id: responseData[key].id,
+    //                 reviewDate: responseData[key].reviewDate,
+    //                 reviewRating: responseData[key].reviewRating,
+    //                 reviewText: responseData[key].reviewText,
+    //                 customer: {
+    //                     id: responseData[key].customer.id,
+    //                     address: responseData[key].customer.address,
+    //                     city: responseData[key].customer.city,
+    //                     dateOfBirth: responseData[key].customer.dateOfBirth,
+    //                     email: responseData[key].customer.email,
+    //                     firstName: responseData[key].customer.firstName,
+    //                     lastName: responseData[key].customer.lastName,
+    //                     password: responseData[key].customer.password,
+    //                     phoneNumber: responseData[key].customer.phoneNumber,
+    //                     state: responseData[key].customer.state,
+    //                     zipCode: responseData[key].customer.zipCode
+    //                 },
+    //                 product: {
+    //                     id: responseData[key].product.id,
+    //                     productName: responseData[key].product.productName,
+    //                     description: responseData[key].product.description,
+    //                     categoryId: responseData[key].product.category.id,
+    //                     price: responseData[key].product.price,
+    //                     sku: responseData[key].product.sku,
+    //                     discountPrice: responseData[key].product.discountPrice,
+    //                     manufacturer: responseData[key].product.manufacturer,
+    //                     imageUrl: responseData[key].product.imageUrl,
+    //                     weight: responseData[key].product.weight,
+    //                     dimension: responseData[key].product.dimension
+    //                 }
+    //             });
+    //             weightedStarReviews = weightedStarReviews + responseData[key].reviewRating;
+    //             console.log(loadedReviews[1].product);
+    //         }
+    
+    //         if (loadedReviews.length > 0) {
+    //             const round = (Math.round((weightedStarReviews / loadedReviews.length) * 2) / 2).toFixed(1);
+    //             setTotalStars(Number(round));
+    //         }
+    
+    //         setReviews(loadedReviews);
+    //         setIsLoadingReviews(false);
+    //     };
+    
+    //     fetchProductReviews().catch((error: any) => {
+    //         setIsLoadingReviews(false);
+    //         setHttpError(error.message);
+    //     })
+    // }, []);
+
+    if(isLoading || isLoadingReviews) {
         return(
             <div className="container m-5">
                 <SpinnerLoading/>
@@ -98,12 +268,14 @@ export const CheckoutPage = () => {
                             <h2>{product?.productName}</h2>
                             <h5 className="text-primary">{product?.sku}</h5>
                             <p className="lead">{product?.description}</p>
-                            <StarsReview rating={3.5} size={25}/>
+                            <StarsReview rating={totalStars} size={25}/>
                         </div>
                     </div>
-                    <CheckoutAndReviewBox product={product} mobile={false}/>
+                    <CheckoutAndReviewBox product={product} mobile={false}/>    
                 </div>
                 <hr />
+                
+                <LatestReviews reviews={reviews} productId={product?.productId} mobile={false} />
             </div>
             
             <div className="container d-lg-none mt-5">
@@ -122,11 +294,12 @@ export const CheckoutPage = () => {
                         <h2>{product?.productName}</h2>
                         <h5 className="text-primary">{product?.manufacturer}</h5>
                         <p className="lead">{product?.description}</p>
-                        <StarsReview rating={4} size={32}/>
+                        <StarsReview rating={totalStars} size={32}/>
                     </div>
                 </div>
                 <CheckoutAndReviewBox product={product} mobile={true}/>
                 <hr />
+                <LatestReviews reviews={reviews} productId={product?.productId} mobile={true} />
             </div>
         </div>
     )

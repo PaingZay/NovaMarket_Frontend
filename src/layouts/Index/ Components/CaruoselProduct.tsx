@@ -33,7 +33,7 @@ export const CarouselProduct: React.FC<{product: ProductModel}> = (props) => {
                                         alt="product"
                                     /> */}
                                     <h6 className='mt-2'>Avatar</h6>
-                                    <p>{props.product.id}</p>
+                                    <p>{props.product.productId}</p>
                                     <p>{props.product.productName}</p>
                                     <p>{props.product.description   }</p>
                                     <a className='btn main-color text-white' href='#'>Buy</a>
