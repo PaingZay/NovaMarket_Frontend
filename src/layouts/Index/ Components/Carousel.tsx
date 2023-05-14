@@ -172,7 +172,11 @@ function Carousel() {
             {/* Mobile */}
             <div className='d-lg-none mt-3'>
                 <div className='row d-flex justify-content-center align-items-center'>
-                    {/* <CarouselProduct customer = {customers[7]} key={customers[7].id}/> */}
+                {  
+                    products.slice(0,3).map(product => (
+                        <CarouselProduct product = {product} key ={product.productId} />
+                    ))                                
+                }
                 </div>
             </div>
             <div className='homepage-carousel-title mt-3'>
