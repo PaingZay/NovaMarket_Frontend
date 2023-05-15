@@ -1,6 +1,7 @@
 import React from "react";
 //import CustomerModel from "../../../Models/CustomerModel";
 import ProductModel from "../../../Models/ProductModel";
+import { Link } from "react-router-dom";
 // import CartModel from "../../../Models/CartModel";
 
 export const CarouselProduct: React.FC<{product: ProductModel}> = (props) => {
@@ -36,7 +37,7 @@ export const CarouselProduct: React.FC<{product: ProductModel}> = (props) => {
                                     <p>{props.product.productId}</p>
                                     <p>{props.product.productName}</p>
                                     <p>{props.product.description   }</p>
-                                    <a className='btn main-color text-white' href='#'>Buy</a>
+                                    <Link className='btn main-color text-white' to={`checkout/${props.product.productId}`}>Reserve</Link>
                                 </div>
                             </div>
     );
