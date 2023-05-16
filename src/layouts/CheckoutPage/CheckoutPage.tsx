@@ -6,23 +6,102 @@ import ReviewModel from "../../Models/ReviewModel";
 import CustomerModel from "../../Models/CustomerModel";
 import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
 import { LatestReviews } from "./latestReviews";
+import { useOktaAuth } from "@okta/okta-react";
+import CartModel from "../../Models/CartModel";
 
 
 export const CheckoutPage = () => {
 
-    const [product, setProduct] = useState<ProductModel>();
-    const [isLoading, setIsLoading] = useState(true);
-    const [httpError, setHttpError] = useState(null);
+    const { authState } = useOktaAuth();
+
+    
 
     //Split the url and store the splitted parts in an array
     //Then take the third index because it is a path variable
     const productId = (window.location.pathname).split('/')[2];
 
     
-
+    //CartState
+    const [cart, setCart] = useState<CartModel>();
+    const [isLoadingCart, setIsLoadingCart] = useState(true);
     
 
+    //Product State
+    const [product, setProduct] = useState<ProductModel>();
+    const [isLoading, setIsLoading] = useState(true);
+    const [httpError, setHttpError] = useState(null);
     
+
+    //Review State
+    const [reviews, setReviews] = useState<ReviewModel[]>([]);
+    const [totalStars, setTotalStars] = useState(0);
+    const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+    
+    
+    //Cart
+    useEffect(() => {
+        const fetchCart = async () => {
+            if(authState && authState.isAuthenticated) {
+                const url = `http://localhost:8081/api/cart/secure/1`;
+
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-Type': 'application/json'
+                }
+            };
+            const cartResponse = await fetch(url, requestOptions);
+            if(!cartResponse.ok){
+                throw new Error('Something went wrong');
+            }
+            const cartResponseJson = await cartResponse.json();
+            const loadedCart: CartModel = {
+                cartId:cartResponseJson.id,
+                customer: {
+                    customerId: cartResponseJson.customer.id,
+                    address: cartResponseJson.customer.address,
+                    city: cartResponseJson.customer.city,
+                    dateOfBirth: cartResponseJson.customer.dateOfBirth,
+                    email: cartResponseJson.customer.email,
+                    firstName: cartResponseJson.customer.firstName,
+                    lastName: cartResponseJson.customer.lastName,
+                    password: cartResponseJson.customer.password,
+                    phoneNumber: cartResponseJson.customer.phoneNumber,
+                    state:cartResponseJson.customer.state,
+                    zipCode:cartResponseJson.customer.zipCode                    
+                },
+                createdDate:cartResponseJson.createdDate,
+                status:cartResponseJson.status
+            };
+
+            setCart(loadedCart);
+            setIsLoadingCart(false);
+                // cartId: number;
+                // customer:{ 
+                //     customerId: number;
+                //     address?: string;
+                //     city?: string;
+                //     dateOfBirth?: Date;
+                //     email?: string;
+                //     firstName?: string;
+                //     lastName?: string;
+                //     password?: string;
+                //     phoneNumber?: string;
+                //     state?: string;
+                //     zipCode?: string;
+                // };
+                // createdDate?: string;
+                // status?: string
+        }
+    }
+    fetchCart().catch((error:any) => {
+        setIsLoadingCart(false);
+        setHttpError(error.message);
+    })
+},[authState]);
+
+    //Product
     useEffect(() => {
         const fetchProduct = async () => {
 
@@ -73,11 +152,7 @@ export const CheckoutPage = () => {
         })
     }, []);
 
-    const [reviews, setReviews] = useState<ReviewModel[]>([]);
-    const [totalStars, setTotalStars] = useState(0);
-    const [isLoadingReviews, setIsLoadingReviews] = useState(true);
-
-
+    //Review
     useEffect(() => {
         const fetchProductReview = async () => {
             const reviewBaseUrl: string = `http://localhost:8081/api/product/${productId}/reviews`;
@@ -234,7 +309,7 @@ export const CheckoutPage = () => {
     //     })
     // }, []);
 
-    if(isLoading || isLoadingReviews) {
+    if(isLoading || isLoadingReviews || isLoadingCart) {
         return(
             <div className="container m-5">
                 <SpinnerLoading/>
@@ -271,7 +346,7 @@ export const CheckoutPage = () => {
                             <StarsReview rating={totalStars} size={25}/>
                         </div>
                     </div>
-                    <CheckoutAndReviewBox product={product} mobile={false}/>    
+                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.cartId}/>
                 </div>
                 <hr />
                 
@@ -297,7 +372,7 @@ export const CheckoutPage = () => {
                         <StarsReview rating={totalStars} size={32}/>
                     </div>
                 </div>
-                <CheckoutAndReviewBox product={product} mobile={true}/>
+                <CheckoutAndReviewBox product={product} mobile={true} cartId={cart?.cartId}/>
                 <hr />
                 <LatestReviews reviews={reviews} productId={product?.productId} mobile={true} />
             </div>

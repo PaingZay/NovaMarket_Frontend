@@ -2,7 +2,7 @@ import CustomerModel from "./CustomerModel";
 
 class CartModel {
 
-    id: number;
+    cartId: number;
     customer:{ 
         customerId: number;
         address?: string;
@@ -16,11 +16,11 @@ class CartModel {
         state?: string;
         zipCode?: string;
     };
-    createdDate?: Date;
+    createdDate?: string;
     status?: string
 
-   constructor(id: number, customer: CustomerModel, createdDate:Date, status:string){
-    this.id = id;
+   constructor(cartId: number, customer: CustomerModel, createdDate:string, status:string){
+    this.cartId = cartId;
     this.customer = customer;
     this.createdDate = createdDate;
     this.status = status;
