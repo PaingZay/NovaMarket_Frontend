@@ -10,6 +10,7 @@ import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import { oktaConfig } from './lib/oktaConfig';
 import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
 import LoginWidget from './Auth/LoginWidget';
+import { CartPage } from './layouts/CartPage/CartPage';
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -43,6 +44,9 @@ export const App = () => {
     </Route>
     <Route path='/checkout/:productId'>
       <CheckoutPage/>
+    </Route>
+    <Route path='/cart/:cartId'>
+      <CartPage/>
     </Route>
     <Route path='/login' render={
             () => <LoginWidget config={oktaConfig} /> 

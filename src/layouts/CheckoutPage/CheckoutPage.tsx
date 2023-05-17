@@ -346,7 +346,7 @@ export const CheckoutPage = () => {
                             <StarsReview rating={totalStars} size={25}/>
                         </div>
                     </div>
-                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.cartId}/>
+                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.cartId}/>    
                 </div>
                 <hr />
                 
