@@ -1,3 +1,5 @@
+//THERE IS NO ERROR BUT CLEAN THE CODE
+
 import { useEffect, useState } from "react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { useOktaAuth } from "@okta/okta-react";
@@ -20,12 +22,17 @@ export const CartPage = () => {
     const [cartItems, setCartItems] = useState<CartItemModel[]>([]);
     const [isLoadingCartItem, setIsLoadingCartItem] = useState(true);
 
+    const customerId = (window.location.pathname).split('/')[2];
+    //const [cartId, setCartId] = useState(0);
 
         //Cart
         useEffect(() => {
             const fetchCart = async () => {
                 if(authState && authState.isAuthenticated) {
-                    const url = `http://localhost:8081/api/cart/secure/1`;
+
+                    //Path variable is no longer need We are using JWT
+                    //So only logged in user's information will be displayed and processed
+                    const url = `http://localhost:8081/api/cart/secure/${customerId}`;
     
                     const requestOptions = {
                         method: 'GET',
@@ -67,80 +74,167 @@ export const CartPage = () => {
             setIsLoadingCart(false);
             setHttpError(error.message);
         })
-    },[authState]);
+    },[authState,customerId]);//CUSTOMERID JUST ADDED NEED TO READ REVIEW PRODUCT
 
-        //CartItem
-        useEffect(() => {
-            const fetchCart = async () => {
-                if(authState && authState.isAuthenticated) {
-                    const url = `http://localhost:8081/api/cart/items/secure/2`;
+    //     //CartItem
+    //     useEffect(() => {
+    //         const fetchCart = async () => {
+    //             if(authState && authState.isAuthenticated) {
 
-                    const requestOptions = {
-                        method: 'GET',
-                        headers: {
-                            Authorization: `Bearer ${authState.accessToken?.accessToken}`,
-                            'Content-Type': 'application/json'
-                    }
-                };
-                const cartResponse = await fetch(url, requestOptions);
-                if(!cartResponse.ok){
-                    throw new Error('Something went wrong');
-                }
-                const responseData = await cartResponse.json();
-
-                const loadedCartItems: CartItemModel[] = [];
-
-            for(const key in responseData) {
-                const cartItem: CartItemModel = new CartItemModel(
-                    responseData[key].id,
-                        new CartModel(
-                            responseData[key].cart.id,
-                            new CustomerModel(
-                                responseData[key].cart.customer.id,
-                                responseData[key].cart.customer.address,
-                                responseData[key].cart.customer.city,
-                                responseData[key].cart.customer.dateOfBirth,
-                                responseData[key].cart.customer.email,
-                                responseData[key].cart.customer.firstName,
-                                responseData[key].cart.customer.lastName,
-                                responseData[key].cart.customer.password,
-                                responseData[key].cart.customer.phoneNumber,
-                                responseData[key].cart.customer.state,
-                                responseData[key].cart.customer.zipCode
-                                ),
-                                responseData[key].cart.createdDate,
-                                responseData[key].cart.status
-                        ),
-                        new ProductModel(
-                            responseData[key].product.id,
-                            responseData[key].product.productName,
-                            responseData[key].product.description,
-                            responseData[key].product.category.id,
-                            responseData[key].product.price,
-                            responseData[key].product.sku,
-                            responseData[key].product.discountPrice,
-                            responseData[key].product.manufacturer,
-                            responseData[key].product.imageUrl,
-                            responseData[key].product.weight,
-                            responseData[key].product.dimension
-                        ),
-                        responseData[key].quantity,
-                        responseData[key].pricePerUnit,
-                        responseData[key].totalPrice
-                    );
+    //                 const url = `http://localhost:8081/api/cart/items/secure/${cart?.cartId}`;
                     
-                    loadedCartItems.push(cartItem);
-                }
 
-                setCartItems(loadedCartItems);
-                setIsLoadingCartItem(false);
+    //                 const requestOptions = {
+    //                     method: 'GET',
+    //                     headers: {
+    //                         Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+    //                         'Content-Type': 'application/json'
+    //                 }
+    //             };
+    //             const cartResponse = await fetch(url, requestOptions);
+    //             if(!cartResponse.ok){
+    //                 throw new Error('Something went wrong');
+    //             }
+    //             const responseData = await cartResponse.json();
+
+    //             const loadedCartItems: CartItemModel[] = [];
+
+    //         for(const key in responseData) {
+    //             const cartItem: CartItemModel = new CartItemModel(
+    //                 responseData[key].id,
+    //                     new CartModel(
+    //                         responseData[key].cart.id,
+    //                         new CustomerModel(
+    //                             responseData[key].cart.customer.id,
+    //                             responseData[key].cart.customer.address,
+    //                             responseData[key].cart.customer.city,
+    //                             responseData[key].cart.customer.dateOfBirth,
+    //                             responseData[key].cart.customer.email,
+    //                             responseData[key].cart.customer.firstName,
+    //                             responseData[key].cart.customer.lastName,
+    //                             responseData[key].cart.customer.password,
+    //                             responseData[key].cart.customer.phoneNumber,
+    //                             responseData[key].cart.customer.state,
+    //                             responseData[key].cart.customer.zipCode
+    //                             ),
+    //                             responseData[key].cart.createdDate,
+    //                             responseData[key].cart.status
+    //                     ),
+    //                     new ProductModel(
+    //                         responseData[key].product.id,
+    //                         responseData[key].product.productName,
+    //                         responseData[key].product.description,
+    //                         responseData[key].product.category.id,
+    //                         responseData[key].product.price,
+    //                         responseData[key].product.sku,
+    //                         responseData[key].product.discountPrice,
+    //                         responseData[key].product.manufacturer,
+    //                         responseData[key].product.imageUrl,
+    //                         responseData[key].product.weight,
+    //                         responseData[key].product.dimension
+    //                     ),
+    //                     responseData[key].quantity,
+    //                     responseData[key].pricePerUnit,
+    //                     responseData[key].totalPrice
+    //                 );
+                    
+    //                 loadedCartItems.push(cartItem);
+    //             }
+
+    //             setCartItems(loadedCartItems);
+    //             setIsLoadingCartItem(false);
+    //         }
+    //     }
+    //     fetchCart().catch((error:any) => {
+    //         setIsLoadingCartItem(false);
+    //         setHttpError(error.message);
+    //     })
+    // },[authState]);
+
+    //Udemy Dynamic Technique Haven't tested.
+    
+    useEffect(() => {
+        const fetchCartItems = async () => {
+          if (cart && authState && authState.isAuthenticated) {
+            /*FrontEnd retrieve the cartItems using cartID of a specific customer with pathVariable
+            This is also ok since the user cannot manually edit the value of cartId in the url
+            But we need to put cart at the button. I need to learn for that*/
+            const url = `http://localhost:8081/api/cart/items/secure/${cart.cartId}`;
+            
+            /*Backend retrieve the cartItem using cartID of a specific customer passed by Jason Web Token
+            Notice that we dont need any cartId path variable here since we already pass JWT to api*/
+            //const url = `http://localhost:8081/api/cart/items/secure/2`;
+
+            const requestOptions = {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+              }
+            };
+    
+            try {
+              const cartItemsResponse = await fetch(url, requestOptions);
+              if (!cartItemsResponse.ok) {
+                throw new Error('Something went wrong');
+              }
+              const responseData = await cartItemsResponse.json();
+    
+              const loadedCartItems: CartItemModel[] = [];
+    
+              for (const key in responseData) {
+                const cartItem: CartItemModel = new CartItemModel(
+                  responseData[key].id,
+                  new CartModel(
+                    responseData[key].cart.id,
+                    new CustomerModel(
+                      responseData[key].cart.customer.id,
+                      responseData[key].cart.customer.address,
+                      responseData[key].cart.customer.city,
+                      responseData[key].cart.customer.dateOfBirth,
+                      responseData[key].cart.customer.email,
+                      responseData[key].cart.customer.firstName,
+                      responseData[key].cart.customer.lastName,
+                      responseData[key].cart.customer.password,
+                      responseData[key].cart.customer.phoneNumber,
+                      responseData[key].cart.customer.state,
+                      responseData[key].cart.customer.zipCode
+                    ),
+                    responseData[key].cart.createdDate,
+                    responseData[key].cart.status
+                  ),
+                  new ProductModel(
+                    responseData[key].product.id,
+                    responseData[key].product.productName,
+                    responseData[key].product.description,
+                    responseData[key].product.category.id,
+                    responseData[key].product.price,
+                    responseData[key].product.sku,
+                    responseData[key].product.discountPrice,
+                    responseData[key].product.manufacturer,
+                    responseData[key].product.imageUrl,
+                    responseData[key].product.weight,
+                    responseData[key].product.dimension
+                  ),
+                  responseData[key].quantity,
+                  responseData[key].pricePerUnit,
+                  responseData[key].totalPrice
+                );
+    
+                loadedCartItems.push(cartItem);
+              }
+    
+              setCartItems(loadedCartItems);
+              setIsLoadingCartItem(false);
+            } catch (error:any) {
+              setIsLoadingCartItem(false);
+              setHttpError(error.message);
             }
-        }
-        fetchCart().catch((error:any) => {
-            setIsLoadingCartItem(false);
-            setHttpError(error.message);
-        })
-    },[authState]);
+          }
+        };
+    
+        fetchCartItems();
+      }, [cart, authState]);
 
     if(isLoadingCart || isLoadingCartItem) {
         return(
