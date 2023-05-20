@@ -1,7 +1,7 @@
 import CartItemModel from "../../../Models/CartItemModel"
 import CartModel from "../../../Models/CartModel"
 
-export const Cart:React.FC<{ cart:CartModel | undefined, cartItem: CartItemModel | undefined, mobile:boolean, isUpdated: number, updateCart: any}> = (props) => {
+export const Cart:React.FC<{ cart:CartModel | undefined, cartItem: CartItemModel | undefined, mobile:boolean, quantityChanges: number, increaseQuantity: any, decreaseQuantity:any}> = (props) => {
     return (
         <div>
             
@@ -25,10 +25,19 @@ export const Cart:React.FC<{ cart:CartModel | undefined, cartItem: CartItemModel
 
                 {props.cartItem?.product.productName}
             </td>
-            <td className="price">${props.cartItem?.product.price}</td>
-            <td><button onClick={() => props.updateCart(props.cartItem?.product.productId)}>Plus</button></td>
+            <td className="price">${props.cartItem?.pricePerUnit}</td>
+            <td><button onClick={() => props.decreaseQuantity(props.cartItem?.product.productId)}>-</button></td>
+            {/* <button onClick={() => {
+                props.decreaseQuantity();
+                props.calculateTotal();
+            }}>-</button> */}
             <td>{props.cartItem?.quantity}</td>
-            <td className="subtotal">{props.cartItem?.pricePerUnit}</td>
+            <td><button onClick={() => props.increaseQuantity(props.cartItem?.product.productId)}>+</button></td>
+            {/* <button onClick={() => {
+                props.increaseQuantity();
+                props.calculateTotal();
+            }}>+</button> */}
+            <td className="subtotal">{props.cartItem?.totalPrice}</td>
             <td><button className="btn btn-remove">Remove</button></td>
             </tr>
             {/* <tr>
