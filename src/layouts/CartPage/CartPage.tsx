@@ -22,6 +22,10 @@ export const CartPage = () => {
     const [cartItems, setCartItems] = useState<CartItemModel[]>([]);
     const [isLoadingCartItem, setIsLoadingCartItem] = useState(true);
 
+    //If updated load data
+    const[quantityChanges, setQuantityChanges] = useState(0);
+    const[isLoadingUpdatedStatus, setIsLoadingUpdatedStatus] = useState(true);
+
     const customerId = (window.location.pathname).split('/')[2];
     //const [cartId, setCartId] = useState(0);
 
@@ -234,9 +238,26 @@ export const CartPage = () => {
         };
     
         fetchCartItems();
-      }, [cart, authState]);
+      }, [quantityChanges, cart, authState]);
 
-    if(isLoadingCart || isLoadingCartItem) {
+      async function updateCart(productId:number) {
+        const url = `http://localhost:8081/api/cart/items/quantity/secure/${productId}`;
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+    };
+    const updateResponse = await fetch(url, requestOptions);
+    if(!updateResponse.ok) {
+        throw new Error('Something went wrong!');
+    }
+    setQuantityChanges(quantityChanges+1);
+    setIsLoadingUpdatedStatus(false);
+    }
+
+    if(isLoadingCart || isLoadingCartItem ) {
         return(
             <div className="container m-5">
                 <SpinnerLoading/>
@@ -253,6 +274,7 @@ export const CartPage = () => {
     }
 
     
+
     return(
         <div>
             <div className="container">
@@ -269,7 +291,7 @@ export const CartPage = () => {
             </thead>
             <tbody>
             {cartItems.map(cartItem => (
-                            <Cart cart={cart} cartItem={cartItem} mobile={false}></Cart>
+                            <Cart cart={cart} cartItem={cartItem} mobile={false} isUpdated={quantityChanges} updateCart={updateCart}></Cart>
                         ))
             }
             </tbody>

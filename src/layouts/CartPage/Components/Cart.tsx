@@ -1,7 +1,7 @@
 import CartItemModel from "../../../Models/CartItemModel"
 import CartModel from "../../../Models/CartModel"
 
-export const Cart:React.FC<{ cart:CartModel | undefined, cartItem: CartItemModel | undefined, mobile:boolean}> = (props) => {
+export const Cart:React.FC<{ cart:CartModel | undefined, cartItem: CartItemModel | undefined, mobile:boolean, isUpdated: number, updateCart: any}> = (props) => {
     return (
         <div>
             
@@ -26,6 +26,7 @@ export const Cart:React.FC<{ cart:CartModel | undefined, cartItem: CartItemModel
                 {props.cartItem?.product.productName}
             </td>
             <td className="price">${props.cartItem?.product.price}</td>
+            <td><button onClick={() => props.updateCart(props.cartItem?.product.productId)}>Plus</button></td>
             <td>{props.cartItem?.quantity}</td>
             <td className="subtotal">{props.cartItem?.pricePerUnit}</td>
             <td><button className="btn btn-remove">Remove</button></td>
