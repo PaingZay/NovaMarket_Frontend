@@ -2,11 +2,11 @@ import CartModel from "./CartModel";
 import ProductModel from "./ProductModel";
 
 class CartItemModel {
-    cartItemId: number;
+    id: number;
     cart:{
-        cartId:number;
+        id:number;
         customer:{ 
-            customerId: number;
+            id: number;
             address?: string;
             city?: string;
             dateOfBirth?: Date;
@@ -22,7 +22,7 @@ class CartItemModel {
     status?: string
     };
     product: {
-        productId: number;
+        id: number;
         productName: string;
         description: string;
         categoryId: number;
@@ -39,8 +39,8 @@ class CartItemModel {
     totalPrice: number;
 
 
-    constructor (cartItemId: number, cart: CartModel, product: ProductModel, quantity: number, pricePerUnit: number, totalPrice: number) {
-            this.cartItemId = cartItemId;
+    constructor (id: number, cart: CartModel, product: ProductModel, quantity: number, pricePerUnit: number, totalPrice: number) {
+            this.id = id;
             this.cart = cart;
             this.product = product;
             this.quantity = quantity;

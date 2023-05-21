@@ -2,12 +2,12 @@ import CustomerModel from "./CustomerModel";
 import ProductModel from "./ProductModel";
 
 class ReviewModel {
-    reviewId:number;
+    id:number;
     reviewDate: string;
     reviewRating: number;
     reviewText: string;
     customer: {
-        customerId: number;
+        id: number;
         address: string;
         city: string;
         dateOfBirth: Date;
@@ -20,7 +20,7 @@ class ReviewModel {
         zipCode: string;
     };
     product: {
-        productId: number;
+        id: number;
         productName: string;
         description: string;
         categoryId: number;
@@ -33,8 +33,8 @@ class ReviewModel {
         dimension: string;
     };
     
-    constructor(reviewId: number, reviewDate: string, reviewRating: number, reviewText: string, customer: CustomerModel, product: ProductModel){
-        this.reviewId = reviewId;
+    constructor(id: number, reviewDate: string, reviewRating: number, reviewText: string, customer: CustomerModel, product: ProductModel){
+        this.id = id;
         this.reviewDate = reviewDate;
         this.reviewRating = reviewRating;
         this.reviewText = reviewText;

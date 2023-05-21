@@ -1,5 +1,5 @@
 class ProductModel{
-    productId: number;
+    id: number;
     productName: string;
     description: string;
     categoryId: number;
@@ -11,8 +11,8 @@ class ProductModel{
     weight: number;
     dimension: string;
 
-    constructor(productId:number, productName:string, description:string, categoryId:number, price:number, sku:number, discountPrice:number, manufacturer:string, imageUrl:string, weight:number, dimension:string){
-        this.productId = productId;
+    constructor(id:number, productName:string, description:string, categoryId:number, price:number, sku:number, discountPrice:number, manufacturer:string, imageUrl:string, weight:number, dimension:string){
+        this.id = id;
         this.productName = productName;
         this.description = description;
         this.categoryId = categoryId;

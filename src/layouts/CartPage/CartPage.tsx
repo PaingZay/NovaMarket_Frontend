@@ -55,9 +55,9 @@ export const CartPage = () => {
         const cartResponseJson = await cartResponse.json();
 
         const loadedCart: CartModel = {
-          cartId: cartResponseJson.id,
+          id: cartResponseJson.id,
           customer: {
-            customerId: cartResponseJson.customer.id,
+            id: cartResponseJson.customer.id,
             address: cartResponseJson.customer.address,
             city: cartResponseJson.customer.city,
             dateOfBirth: cartResponseJson.customer.dateOfBirth,
@@ -160,13 +160,14 @@ export const CartPage = () => {
 
   //Udemy Dynamic Technique Haven't tested.
 
+
   useEffect(() => {
     const fetchCartItems = async () => {
       if (cart && authState && authState.isAuthenticated) {
         /*FrontEnd retrieve the cartItems using cartID of a specific customer with pathVariable
         This is also ok since the user cannot manually edit the value of cartId in the url
         But we need to put cart at the button. I need to learn for that*/
-        const url = `http://localhost:8081/api/cart/items/secure/${cart.cartId}`;
+        const url = `http://localhost:8081/api/cart/items/secure/${cart.id}`;
 
         /*Backend retrieve the cartItem using cartID of a specific customer passed by Jason Web Token
         Notice that we dont need any cartId path variable here since we already pass JWT to api*/

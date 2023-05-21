@@ -1,5 +1,5 @@
 class CustomerModel {
-    customerId: number;
+    id: number;
     address: string;
     city: string;
     dateOfBirth: Date;
@@ -11,8 +11,8 @@ class CustomerModel {
     state: string;
     zipCode: string;
 
-    constructor(customerId: number, address: string, city: string, dateOfBirth: Date, email: string, firstName: string, lastName: string, password: string, phoneNumber: string, state: string, zipCode: string){
-        this.customerId = customerId;
+    constructor(id: number, address: string, city: string, dateOfBirth: Date, email: string, firstName: string, lastName: string, password: string, phoneNumber: string, state: string, zipCode: string){
+        this.id = id;
         this.address = address;
         this.city = city;
         this.dateOfBirth = dateOfBirth;

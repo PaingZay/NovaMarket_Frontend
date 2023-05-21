@@ -226,7 +226,7 @@ function SearchProductPage(){
                     </p>
                     {
                         products.map(product => (
-                            <SearchProduct product = {product} key={product.productId}/>
+                            <SearchProduct product = {product} key={product.id}/>
                         ))
                     }
                     </>

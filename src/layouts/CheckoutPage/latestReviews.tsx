@@ -16,7 +16,7 @@ export const LatestReviews: React.FC<{
                 {props.reviews.length > 0 ?
                     <>
                         {props.reviews.slice(0, 3).map(eachReview => (
-                            <Review review={eachReview} key={eachReview.reviewId}></Review>
+                            <Review review={eachReview} key={eachReview.id}></Review>
                         ))}
 
                         <div className='m-3'>

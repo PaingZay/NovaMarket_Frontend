@@ -133,7 +133,7 @@ function Carousel() {
                             {
                                 
                                 products.slice(0,3).map(product => (
-                                    <CarouselProduct product = {product} key ={product.productId} />
+                                    <CarouselProduct product = {product} key ={product.id} />
                                 ))                                
                             }
                         </div>
@@ -142,7 +142,7 @@ function Carousel() {
                         <div className='row d-flex justify-content-center align-items-center'>
                             {
                                 products.slice(3,6).map(product => (
-                                    <CarouselProduct product = {product} key ={product.productId} />
+                                    <CarouselProduct product = {product} key ={product.id} />
                                 ))    
                             }
                         </div>
@@ -174,7 +174,7 @@ function Carousel() {
                 <div className='row d-flex justify-content-center align-items-center'>
                 {  
                     products.slice(0,3).map(product => (
-                        <CarouselProduct product = {product} key ={product.productId} />
+                        <CarouselProduct product = {product} key ={product.id} />
                     ))                                
                 }
                 </div>

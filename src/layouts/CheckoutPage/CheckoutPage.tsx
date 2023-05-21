@@ -8,6 +8,7 @@ import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
 import { LatestReviews } from "./latestReviews";
 import { useOktaAuth } from "@okta/okta-react";
 import CartModel from "../../Models/CartModel";
+import CartItemModel from "../../Models/CartItemModel";
 
 
 export const CheckoutPage = () => {
@@ -30,76 +31,16 @@ export const CheckoutPage = () => {
     const [product, setProduct] = useState<ProductModel>();
     const [isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
-    
+
+    //Product State
+    const [user, setUser] = useState<CustomerModel>();
+    const [isLoadingUser, setIsLoadingUser] = useState(true);
 
     //Review State
     const [reviews, setReviews] = useState<ReviewModel[]>([]);
     const [totalStars, setTotalStars] = useState(0);
     const [isLoadingReviews, setIsLoadingReviews] = useState(true);
     
-    
-    //Cart
-    useEffect(() => {
-        const fetchCart = async () => {
-            if(authState && authState.isAuthenticated) {
-                const url = `http://localhost:8081/api/cart/secure/1`;
-
-                const requestOptions = {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
-                        'Content-Type': 'application/json'
-                }
-            };
-            const cartResponse = await fetch(url, requestOptions);
-            if(!cartResponse.ok){
-                throw new Error('Something went wrong');
-            }
-            const cartResponseJson = await cartResponse.json();
-            const loadedCart: CartModel = {
-                cartId:cartResponseJson.id,
-                customer: {
-                    customerId: cartResponseJson.customer.id,
-                    address: cartResponseJson.customer.address,
-                    city: cartResponseJson.customer.city,
-                    dateOfBirth: cartResponseJson.customer.dateOfBirth,
-                    email: cartResponseJson.customer.email,
-                    firstName: cartResponseJson.customer.firstName,
-                    lastName: cartResponseJson.customer.lastName,
-                    password: cartResponseJson.customer.password,
-                    phoneNumber: cartResponseJson.customer.phoneNumber,
-                    state:cartResponseJson.customer.state,
-                    zipCode:cartResponseJson.customer.zipCode                    
-                },
-                createdDate:cartResponseJson.createdDate,
-                status:cartResponseJson.status
-            };
-
-            setCart(loadedCart);
-            setIsLoadingCart(false);
-                // cartId: number;
-                // customer:{ 
-                //     customerId: number;
-                //     address?: string;
-                //     city?: string;
-                //     dateOfBirth?: Date;
-                //     email?: string;
-                //     firstName?: string;
-                //     lastName?: string;
-                //     password?: string;
-                //     phoneNumber?: string;
-                //     state?: string;
-                //     zipCode?: string;
-                // };
-                // createdDate?: string;
-                // status?: string
-        }
-    }
-    fetchCart().catch((error:any) => {
-        setIsLoadingCart(false);
-        setHttpError(error.message);
-    })
-},[authState]);
 
     //Product
     useEffect(() => {
@@ -130,7 +71,7 @@ export const CheckoutPage = () => {
             //const loadedProducts: ProductModel[] = [];
 
             const loadedProduct: ProductModel = {
-                productId: responseJson.id,
+                id: responseJson.id,
                 productName: responseJson.productName,
                 description: responseJson.description,
                 categoryId: responseJson.categoryId,
@@ -230,9 +171,7 @@ export const CheckoutPage = () => {
                 setIsLoadingReviews(false);
                 setHttpError(error.message);
             })
-    }, []);
-
-    
+    }, []);   
 
     // useEffect(() => {
     //     const fetchProductReviews = async () => {
@@ -309,7 +248,50 @@ export const CheckoutPage = () => {
     //     })
     // }, []);
 
-    if(isLoading || isLoadingReviews || isLoadingCart) {
+    //Cart
+    useEffect(() => {
+        const fetchUser = async () => {
+            if(authState && authState.isAuthenticated) {
+                const url = `http://localhost:8081/api/user/secure/`;
+
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-Type': 'application/json'
+                }
+            };
+            const userResponse = await fetch(url, requestOptions);
+            if(!userResponse.ok){
+                throw new Error('Something went wrong');
+            }
+            const userResponseJson = await userResponse.json();
+            const loadedUser: CustomerModel = {
+                    id: userResponseJson.id,
+                    address: userResponseJson.address,
+                    city: userResponseJson.city,
+                    dateOfBirth: userResponseJson.dateOfBirth,
+                    email: userResponseJson.email,
+                    firstName: userResponseJson.firstName,
+                    lastName: userResponseJson.lastName,
+                    password: userResponseJson.password,
+                    phoneNumber: userResponseJson.phoneNumber,
+                    state: userResponseJson.state,
+                    zipCode: userResponseJson.zipCode
+            };
+
+            setUser(loadedUser);
+            setIsLoadingUser(false);
+        }
+    }
+    fetchUser().catch((error:any) => {
+        setIsLoadingUser(false);
+        setHttpError(error.message);
+    })
+},[authState]);
+
+
+    if(isLoading || isLoadingReviews || isLoadingUser) {
         return(
             <div className="container m-5">
                 <SpinnerLoading/>
@@ -324,6 +306,141 @@ export const CheckoutPage = () => {
             </div>
         )
     }
+
+    //Cart
+    async function getExistingCart() {
+        const fetchCart = async () => {
+            if(authState && authState.isAuthenticated) {
+                const url = `http://localhost:8081/api/cart/secure/1`;
+
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-Type': 'application/json'
+                }
+            };
+            const cartResponse = await fetch(url, requestOptions);
+            if(!cartResponse.ok){
+                getNewCart();
+                addToCart();
+            }
+            else {
+            const cartResponseJson = await cartResponse.json();
+            const loadedCart: CartModel = {
+                id:cartResponseJson.id,
+                customer: {
+                    id: cartResponseJson.customer.id,
+                    address: cartResponseJson.customer.address,
+                    city: cartResponseJson.customer.city,
+                    dateOfBirth: cartResponseJson.customer.dateOfBirth,
+                    email: cartResponseJson.customer.email,
+                    firstName: cartResponseJson.customer.firstName,
+                    lastName: cartResponseJson.customer.lastName,
+                    password: cartResponseJson.customer.password,
+                    phoneNumber: cartResponseJson.customer.phoneNumber,
+                    state:cartResponseJson.customer.state,
+                    zipCode:cartResponseJson.customer.zipCode                    
+                },
+                createdDate:cartResponseJson.createdDate,
+                status:cartResponseJson.status
+            };
+
+            setCart(loadedCart);
+            addToCart();
+            }
+        }
+    }
+    fetchCart().catch((error:any) => {
+        setIsLoadingCart(false);
+        setHttpError(error.message);
+    })
+    }
+
+    function getCurrentDate(): string {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+      
+        return `${year}-${month}-${day}`;
+      }
+
+    async function getNewCart() {
+        const url = `http://localhost:8081/api/cart/secure`;
+        if(authState?.isAuthenticated && cart == null && user != null) {
+
+            const formattedDate = getCurrentDate();
+            
+            const cart: CartModel = new CartModel(0,user,formattedDate,'Active');
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(cart)
+            };
+            console.log(cart);
+            const createNewCartResponse = await fetch(url, requestOptions);
+            console.log("FUNCTION STARTED"+createNewCartResponse);
+            console.log(createNewCartResponse);
+            if(!createNewCartResponse.ok){
+                throw new Error('Something went wrong!');
+            }
+    }
+}
+
+//This is my version having issues ChatGPT fixed for that
+// async function addToCart() {
+//     const url = `http://localhost:8081/api/cart/items/secure/addToCart`;
+
+//     if(authState?.isAuthenticated && cart != null && product!=null) {
+        
+//         const cartItem: CartItemModel = new CartItemModel(0, cart, product, 1, product.price, 0);
+//             const requestOptions = {
+//                 method: 'POST',
+//                 headers: {
+//                     Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+//                     'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(cartItem)
+//         };
+//         console.log("CartItem"+cartItem);
+//         const createNewCartItemResponse = await fetch(url, requestOptions);
+//         console.log("FUNCTION STARTED"+createNewCartItemResponse);
+//         if(!createNewCartItemResponse.ok){
+//             throw new Error('Something went wrong!');
+//         }
+// }
+// }
+
+async function addToCart() {
+    const url = `http://localhost:8081/api/cart/items/secure/addToCart`;
+  
+    if (authState?.isAuthenticated && cart != null && product != null) {
+
+      const cartItem: CartItemModel = new CartItemModel(0, cart, product, 1, product.price, 0);
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cartItem)
+      };
+      
+      console.log("CartItem", cartItem); // Logging the object
+  
+      const createNewCartItemResponse = await fetch(url, requestOptions);
+      console.log("Response", createNewCartItemResponse); // Logging the response
+  
+      if (!createNewCartItemResponse.ok) {
+        throw new Error('Something went wrong!');
+      }
+    }
+  }
+  
 
     return(
         <div>
@@ -340,17 +457,18 @@ export const CheckoutPage = () => {
                     </div>
                     <div className="col-4 col-md-4 container">
                         <div className="ml-2">
+                            <button type="button" onClick={getExistingCart}>Create</button>
                             <h2>{product?.productName}</h2>
                             <h5 className="text-primary">{product?.sku}</h5>
                             <p className="lead">{product?.description}</p>
                             <StarsReview rating={totalStars} size={25}/>
                         </div>
                     </div>
-                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.cartId}/>    
+                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.id}/>    
                 </div>
                 <hr />
                 
-                <LatestReviews reviews={reviews} productId={product?.productId} mobile={false} />
+                <LatestReviews reviews={reviews} productId={product?.id} mobile={false} />
             </div>
             
             <div className="container d-lg-none mt-5">
@@ -372,9 +490,9 @@ export const CheckoutPage = () => {
                         <StarsReview rating={totalStars} size={32}/>
                     </div>
                 </div>
-                <CheckoutAndReviewBox product={product} mobile={true} cartId={cart?.cartId}/>
+                <CheckoutAndReviewBox product={product} mobile={true} cartId={cart?.id}/>
                 <hr />
-                <LatestReviews reviews={reviews} productId={product?.productId} mobile={true} />
+                <LatestReviews reviews={reviews} productId={product?.id} mobile={true} />
             </div>
         </div>
     )
