@@ -40,8 +40,10 @@ export const CheckoutPage = () => {
     const [reviews, setReviews] = useState<ReviewModel[]>([]);
     const [totalStars, setTotalStars] = useState(0);
     const [isLoadingReviews, setIsLoadingReviews] = useState(true);
-    
 
+    const [isCartExisted, setIsCartExisted] = useState(false);
+    
+    
     //Product
     useEffect(() => {
         const fetchProduct = async () => {
@@ -173,7 +175,6 @@ export const CheckoutPage = () => {
             })
     }, []);   
 
-    // useEffect(() => {
     //     const fetchProductReviews = async () => {
     //         const baseUrl: string = `http://localhost:8081/api/product/${productId}/reviews`;
     
@@ -290,8 +291,58 @@ export const CheckoutPage = () => {
     })
 },[authState]);
 
+useEffect(() => {
+    const fetchCart = async () => {
+        if(authState && authState.isAuthenticated) {
+            const url = `http://localhost:8081/api/cart/secure/1`;
 
-    if(isLoading || isLoadingReviews || isLoadingUser) {
+            const requestOptions = {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                    'Content-Type': 'application/json'
+            }
+        };
+        const cartResponse = await fetch(url, requestOptions);
+        if(!cartResponse.ok){
+            console.log("Response is not ok");
+            setIsLoadingCart(false);
+        }
+        else {
+        const cartResponseJson = await cartResponse.json();
+        const loadedCart: CartModel = {
+            id:cartResponseJson.id,
+            customer: {
+                id: cartResponseJson.customer.id,
+                address: cartResponseJson.customer.address,
+                city: cartResponseJson.customer.city,
+                dateOfBirth: cartResponseJson.customer.dateOfBirth,
+                email: cartResponseJson.customer.email,
+                firstName: cartResponseJson.customer.firstName,
+                lastName: cartResponseJson.customer.lastName,
+                password: cartResponseJson.customer.password,
+                phoneNumber: cartResponseJson.customer.phoneNumber,
+                state:cartResponseJson.customer.state,
+                zipCode:cartResponseJson.customer.zipCode                    
+            },
+            createdDate:cartResponseJson.createdDate,
+            status:cartResponseJson.status
+        };
+
+        setCart(loadedCart);
+        setIsLoadingCart(false);
+
+        addToCart();
+        }
+    }
+}
+fetchCart().catch((error:any) => {
+    setIsLoadingCart(false);
+    setHttpError(error.message);
+})
+},[authState,isCartExisted]);
+
+    if(isLoading || isLoadingReviews || isLoadingUser || isLoadingCart) {
         return(
             <div className="container m-5">
                 <SpinnerLoading/>
@@ -307,56 +358,6 @@ export const CheckoutPage = () => {
         )
     }
 
-    //Cart
-    async function getExistingCart() {
-        const fetchCart = async () => {
-            if(authState && authState.isAuthenticated) {
-                const url = `http://localhost:8081/api/cart/secure/1`;
-
-                const requestOptions = {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
-                        'Content-Type': 'application/json'
-                }
-            };
-            const cartResponse = await fetch(url, requestOptions);
-            if(!cartResponse.ok){
-                getNewCart();
-                addToCart();
-            }
-            else {
-            const cartResponseJson = await cartResponse.json();
-            const loadedCart: CartModel = {
-                id:cartResponseJson.id,
-                customer: {
-                    id: cartResponseJson.customer.id,
-                    address: cartResponseJson.customer.address,
-                    city: cartResponseJson.customer.city,
-                    dateOfBirth: cartResponseJson.customer.dateOfBirth,
-                    email: cartResponseJson.customer.email,
-                    firstName: cartResponseJson.customer.firstName,
-                    lastName: cartResponseJson.customer.lastName,
-                    password: cartResponseJson.customer.password,
-                    phoneNumber: cartResponseJson.customer.phoneNumber,
-                    state:cartResponseJson.customer.state,
-                    zipCode:cartResponseJson.customer.zipCode                    
-                },
-                createdDate:cartResponseJson.createdDate,
-                status:cartResponseJson.status
-            };
-
-            setCart(loadedCart);
-            addToCart();
-            }
-        }
-    }
-    fetchCart().catch((error:any) => {
-        setIsLoadingCart(false);
-        setHttpError(error.message);
-    })
-    }
-
     function getCurrentDate(): string {
         const currentDate = new Date();
         const year = currentDate.getFullYear();
@@ -369,6 +370,8 @@ export const CheckoutPage = () => {
     async function getNewCart() {
         const url = `http://localhost:8081/api/cart/secure`;
         if(authState?.isAuthenticated && cart == null && user != null) {
+
+            console.log("Here");
 
             const formattedDate = getCurrentDate();
             
@@ -383,37 +386,13 @@ export const CheckoutPage = () => {
             };
             console.log(cart);
             const createNewCartResponse = await fetch(url, requestOptions);
-            console.log("FUNCTION STARTED"+createNewCartResponse);
             console.log(createNewCartResponse);
             if(!createNewCartResponse.ok){
                 throw new Error('Something went wrong!');
             }
+            setIsCartExisted(true);
+        }
     }
-}
-
-//This is my version having issues ChatGPT fixed for that
-// async function addToCart() {
-//     const url = `http://localhost:8081/api/cart/items/secure/addToCart`;
-
-//     if(authState?.isAuthenticated && cart != null && product!=null) {
-        
-//         const cartItem: CartItemModel = new CartItemModel(0, cart, product, 1, product.price, 0);
-//             const requestOptions = {
-//                 method: 'POST',
-//                 headers: {
-//                     Authorization: `Bearer ${authState.accessToken?.accessToken}`,
-//                     'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify(cartItem)
-//         };
-//         console.log("CartItem"+cartItem);
-//         const createNewCartItemResponse = await fetch(url, requestOptions);
-//         console.log("FUNCTION STARTED"+createNewCartItemResponse);
-//         if(!createNewCartItemResponse.ok){
-//             throw new Error('Something went wrong!');
-//         }
-// }
-// }
 
 async function addToCart() {
     const url = `http://localhost:8081/api/cart/items/secure/addToCart`;
@@ -429,18 +408,22 @@ async function addToCart() {
         },
         body: JSON.stringify(cartItem)
       };
-      
-      console.log("CartItem", cartItem); // Logging the object
   
       const createNewCartItemResponse = await fetch(url, requestOptions);
-      console.log("Response", createNewCartItemResponse); // Logging the response
   
       if (!createNewCartItemResponse.ok) {
         throw new Error('Something went wrong!');
       }
+    } else {
+        if(isCartExisted == false){
+            getNewCart();
+        }
     }
   }
-  
+
+  function deleteCart(){
+    setIsCartExisted(!isCartExisted);
+  }
 
     return(
         <div>
@@ -457,7 +440,8 @@ async function addToCart() {
                     </div>
                     <div className="col-4 col-md-4 container">
                         <div className="ml-2">
-                            <button type="button" onClick={getExistingCart}>Create</button>
+                            <button type="button" onClick={addToCart}>Create</button>
+                            <button type="button" onClick={deleteCart}>Delete</button>
                             <h2>{product?.productName}</h2>
                             <h5 className="text-primary">{product?.sku}</h5>
                             <p className="lead">{product?.description}</p>
