@@ -496,7 +496,6 @@ async function addToCart() {
                     <div className="col-4 col-md-4 container">
                         <div className="ml-2">
                             <button type="button" onClick={addToCart}>Create</button>
-                            <button type="button" onClick={deleteCart}>Delete</button>
                             <h2>{product?.productName}</h2>
                             <h5 className="text-primary">{product?.sku}</h5>
                             <p className="lead">{product?.description}</p>
