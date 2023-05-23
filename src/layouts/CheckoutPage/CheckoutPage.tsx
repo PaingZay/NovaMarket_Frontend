@@ -42,6 +42,9 @@ export const CheckoutPage = () => {
     const [isLoadingReviews, setIsLoadingReviews] = useState(true);
 
     const [isCartExisted, setIsCartExisted] = useState(false);
+
+    const [isReviewLeft, setIsReviewLeft] = useState(false);
+    const [isLoadingUserReview, setIsLoadingUserReview] = useState(true);
     
     
     //Product
@@ -173,7 +176,60 @@ export const CheckoutPage = () => {
                 setIsLoadingReviews(false);
                 setHttpError(error.message);
             })
-    }, []);   
+    }, [isReviewLeft]);
+    
+    // useEffect(() => {
+    //     const fetchUserReviewProduct = async () => {
+    //         if(authState && authState.isAuthenticated){
+    //             const url = `http://localhost:8081/api/product/secure/${productId}/reviews`;
+    //             const requestOptions = {
+    //                 method: 'GET',
+    //                 headers: {
+    //                     Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+    //                     'Content-Type': 'application/json'
+    //             }
+    //         };
+    //         const userReview = await fetch(url, requestOptions);
+    //         if(!userReview.ok) {
+    //             throw new Error('Something went wrong');
+    //         }
+    //         const userReviewResponseJson = await userReview.json();
+    //         setIsReviewLeft(userReviewResponseJson);
+    //     }
+    //     setIsLoadingUserReview(false);
+    //     }
+    //     fetchUserReviewProduct().catch((error:any) => {
+    //         setIsLoadingUserReview(false);
+    //         setHttpError(error);
+    //     })
+    // }, [authState]);
+
+    useEffect(() => {
+        const fetchUserReviewBook = async () => {
+            if (authState && authState.isAuthenticated) {
+                const url = `http://localhost:8081/api/product/secure/${productId}/reviews`;
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                };
+                const userReview = await fetch(url, requestOptions);
+                if (!userReview.ok) {
+                    throw new Error('Something went wrong');
+                }
+                const userReviewResponseJson = await userReview.json();
+                setIsReviewLeft(userReviewResponseJson);
+            }
+            setIsLoadingUserReview(false);
+        }
+        fetchUserReviewBook().catch((error: any) => {
+            setIsLoadingUserReview(false);
+            // setHttpError(error.message);
+            //Just hide message if user is not giving review on this product
+        })
+    }, [authState]);
 
     //     const fetchProductReviews = async () => {
     //         const baseUrl: string = `http://localhost:8081/api/product/${productId}/reviews`;
@@ -305,7 +361,6 @@ useEffect(() => {
         };
         const cartResponse = await fetch(url, requestOptions);
         if(!cartResponse.ok){
-            console.log("Response is not ok");
             setIsLoadingCart(false);
         }
         else {
@@ -342,7 +397,7 @@ fetchCart().catch((error:any) => {
 })
 },[authState,isCartExisted]);
 
-    if(isLoading || isLoadingReviews || isLoadingUser || isLoadingCart) {
+    if(isLoading || isLoadingReviews || isLoadingUser || isLoadingCart || isLoadingUserReview) {
         return(
             <div className="container m-5">
                 <SpinnerLoading/>
@@ -448,7 +503,7 @@ async function addToCart() {
                             <StarsReview rating={totalStars} size={25}/>
                         </div>
                     </div>
-                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.id}/>    
+                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.id} isAuthenticated={authState?.isAuthenticated} isReviewLeft={isReviewLeft}/>    
                 </div>
                 <hr />
                 
@@ -474,7 +529,7 @@ async function addToCart() {
                         <StarsReview rating={totalStars} size={32}/>
                     </div>
                 </div>
-                <CheckoutAndReviewBox product={product} mobile={true} cartId={cart?.id}/>
+                <CheckoutAndReviewBox product={product} mobile={true} cartId={cart?.id} isAuthenticated={authState?.isAuthenticated} isReviewLeft={isReviewLeft}/>
                 <hr />
                 <LatestReviews reviews={reviews} productId={product?.id} mobile={true} />
             </div>

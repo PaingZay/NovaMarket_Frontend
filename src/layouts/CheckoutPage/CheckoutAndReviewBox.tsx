@@ -1,7 +1,17 @@
 import { Link } from "react-router-dom";
 import ProductModel from "../../Models/ProductModel";
 
-export const CheckoutAndReviewBox:React.FC<{ product:ProductModel | undefined, mobile:boolean, cartId: number | undefined}> = (props) => {
+export const CheckoutAndReviewBox:React.FC<{ product:ProductModel | undefined, mobile:boolean, cartId: number | undefined, isAuthenticated: any, isReviewLeft: boolean}> = (props) => {
+
+    function reviewRender() {
+        if(props.isAuthenticated && !props.isReviewLeft) {
+            return(<p>Leave a review component here.</p>)
+        } else if (props.isAuthenticated && props.isReviewLeft) {
+            return(<p><b>Thank you for your review.</b></p>)
+        }
+        return (<div><hr /><p>Sign in to be able to leave a review.</p></div>)
+    }
+
     return (
         <div className={props.mobile ? 'card d-flex mt-5' : 'card col-3 container d-flex mb-5'}>
             <div className='card-body container'>
@@ -37,7 +47,7 @@ export const CheckoutAndReviewBox:React.FC<{ product:ProductModel | undefined, m
                     This number can change until placing order has been complete.
                 </p>
                 <p>
-                    Sign in to be able to leave a review.
+                    {reviewRender()}
                 </p>
             </div>
         </div>
