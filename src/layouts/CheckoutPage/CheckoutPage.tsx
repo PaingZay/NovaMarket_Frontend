@@ -451,14 +451,38 @@ fetchCart().catch((error:any) => {
         }
     }
 
+// async function addToCart() {
+//     const url = `http://localhost:8081/api/cart/items/secure/addToCart`;
+  
+//     if (authState?.isAuthenticated && cart != null && product != null) {
+
+//       const cartItem: CartItemModel = new CartItemModel(0, cart, product, 1, product.price, 0);
+//       const requestOptions = {
+//         method: 'PUT',
+//         headers: {
+//           Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+//           'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(cartItem)
+//       };
+
+//       console.log(cartItem);
+  
+//       const createNewCartItemResponse = await fetch(url, requestOptions);
+  
+//       if (!createNewCartItemResponse.ok) {
+//         throw new Error('Something went wrong in add to cart');
+//       }
+//       }
+//   }
+
 async function addToCart() {
     const url = `http://localhost:8081/api/cart/items/secure/addToCart`;
   
     if (authState?.isAuthenticated && cart != null && product != null) {
-
       const cartItem: CartItemModel = new CartItemModel(0, cart, product, 1, product.price, 0);
       const requestOptions = {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${authState.accessToken?.accessToken}`,
           'Content-Type': 'application/json'
@@ -466,12 +490,14 @@ async function addToCart() {
         body: JSON.stringify(cartItem)
       };
   
+      console.log(cartItem);
+  
       const createNewCartItemResponse = await fetch(url, requestOptions);
   
       if (!createNewCartItemResponse.ok) {
         throw new Error('Something went wrong in add to cart');
       }
-      }
+    }
   }
 
 
@@ -490,7 +516,7 @@ async function addToCart() {
                     </div>
                     <div className="col-4 col-md-4 container">
                         <div className="ml-2">
-                            <button type="button" onClick={addToCart}>Create</button>
+                            <button type="button" onClick={addToCart}>Add To Cart</button>
                             <h2>{product?.productName}</h2>
                             <h5 className="text-primary">{product?.sku}</h5>
                             <p className="lead">{product?.description}</p>
