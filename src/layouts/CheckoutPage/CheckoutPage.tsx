@@ -362,6 +362,7 @@ useEffect(() => {
         const cartResponse = await fetch(url, requestOptions);
         if(!cartResponse.ok){
             setIsLoadingCart(false);
+            throw new Error('Something went wrong');
         }
         else {
         const cartResponseJson = await cartResponse.json();
@@ -392,6 +393,7 @@ useEffect(() => {
     }
 }
 fetchCart().catch((error:any) => {
+    getNewCart();
     setIsLoadingCart(false);
     setHttpError(error.message);
 })
@@ -467,18 +469,11 @@ async function addToCart() {
       const createNewCartItemResponse = await fetch(url, requestOptions);
   
       if (!createNewCartItemResponse.ok) {
-        throw new Error('Something went wrong!');
+        throw new Error('Something went wrong in add to cart');
       }
-    } else {
-        if(isCartExisted == false){
-            getNewCart();
-        }
-    }
+      }
   }
 
-  function deleteCart(){
-    setIsCartExisted(!isCartExisted);
-  }
 
     return(
         <div>
