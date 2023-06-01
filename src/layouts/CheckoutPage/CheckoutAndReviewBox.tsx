@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 import ProductModel from "../../Models/ProductModel";
 import { LeaveReview } from "../Utils/LeaveReview";
 
-export const CheckoutAndReviewBox:React.FC<{ product:ProductModel | undefined, mobile:boolean, cartId: number | undefined, isAuthenticated: any, isReviewLeft: boolean}> = (props) => {
+export const CheckoutAndReviewBox:React.FC<{ product:ProductModel | undefined, mobile:boolean, cartId: number | undefined, isAuthenticated: any, isReviewLeft: boolean, submitReview: any}> = (props) => {
 
     function reviewRender() {
         if(props.isAuthenticated && !props.isReviewLeft) {
             return(
-                <LeaveReview/>
+                <LeaveReview submitReview={props.submitReview}/>
             )
         } else if (props.isAuthenticated && props.isReviewLeft) {
             return(<p><b>Thank you for your review.</b></p>)

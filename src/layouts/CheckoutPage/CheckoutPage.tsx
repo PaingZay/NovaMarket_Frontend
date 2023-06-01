@@ -9,6 +9,7 @@ import { LatestReviews } from "./latestReviews";
 import { useOktaAuth } from "@okta/okta-react";
 import CartModel from "../../Models/CartModel";
 import CartItemModel from "../../Models/CartItemModel";
+import ReviewRequestModel from "../../Models/ReviewRequestModel";
 
 
 export const CheckoutPage = () => {
@@ -500,6 +501,29 @@ async function addToCart() {
     }
   }
 
+  async function submitReview(starInput: number, reviewDescription:string) {
+    let productId: number = 0;
+    if(product?.id) {
+        productId = product.id;
+    }
+    
+    const reviewRequestModel = new ReviewRequestModel(starInput, productId, reviewDescription);
+    const url = `http://localhost:8081/api/product/secure/reviews`;
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reviewRequestModel)
+      };
+      console.log("Review Request Model"+JSON.stringify(reviewRequestModel));
+      const returnResponse = await fetch(url, requestOptions);
+      if (!returnResponse.ok) {
+        throw new Error('Something went wrong in leave review');
+      }
+      setIsReviewLeft(true);
+  }
 
     return(
         <div>
@@ -523,7 +547,7 @@ async function addToCart() {
                             <StarsReview rating={totalStars} size={25}/>
                         </div>
                     </div>
-                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.id} isAuthenticated={authState?.isAuthenticated} isReviewLeft={isReviewLeft}/>    
+                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.id} isAuthenticated={authState?.isAuthenticated} isReviewLeft={isReviewLeft} submitReview={submitReview}/>    
                 </div>
                 <hr />
                 
@@ -549,7 +573,7 @@ async function addToCart() {
                         <StarsReview rating={totalStars} size={32}/>
                     </div>
                 </div>
-                <CheckoutAndReviewBox product={product} mobile={true} cartId={cart?.id} isAuthenticated={authState?.isAuthenticated} isReviewLeft={isReviewLeft}/>
+                <CheckoutAndReviewBox product={product} mobile={true} cartId={cart?.id} isAuthenticated={authState?.isAuthenticated} isReviewLeft={isReviewLeft} submitReview={submitReview}/>
                 <hr />
                 <LatestReviews reviews={reviews} productId={product?.id} mobile={true} />
             </div>

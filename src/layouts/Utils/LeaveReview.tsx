@@ -1,12 +1,15 @@
 import { StarsReview } from "./StarsReview";
 import {useState} from 'react';
 
-export const LeaveReview: React.FC<{}> = (props) => {
+export const LeaveReview: React.FC<{submitReview: any}> = (props) => {
 
     const [starInput, setStarInput] = useState(0);
+    const [displayInpt, setDisplayInput] = useState(false);
+    const [reviewDescription, setReviewDescription] = useState('');
     
     function starValue(value:number) {
         setStarInput(value);
+        setDisplayInput(true);
     }
 
     return (
@@ -28,6 +31,23 @@ export const LeaveReview: React.FC<{}> = (props) => {
                 <li><button onClick={() => starValue(5)} className="dropdown-item">5 star</button></li>
             </ul>
             <StarsReview rating={starInput} size={32}/>
+
+            {displayInpt &&
+                <form action="POST">
+                    <hr />
+
+                    <div className="mb-3">
+                        <label className="form-label">Description</label>
+                        <textarea className="form-control" id="submitReviewDescription" placeholder="Optional" rows={3} onChange={e => setReviewDescription(e.target.value)}></textarea>
+                    </div>
+
+                    <div>
+                        <button type="button" onClick={() => props.submitReview(starInput,reviewDescription)} className="btn btn-primary mt-3">
+                            Submit Review
+                        </button>
+                    </div>
+                </form>
+            }
         </div>
     );
 }
