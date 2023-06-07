@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import ProductModel from "../../Models/ProductModel";
 import { LeaveReview } from "../Utils/LeaveReview";
 
-export const CheckoutAndReviewBox:React.FC<{ product:ProductModel | undefined, mobile:boolean, cartId: number | undefined, isAuthenticated: any, isReviewLeft: boolean, submitReview: any}> = (props) => {
+export const CheckoutAndReviewBox:React.FC<{ product:ProductModel | undefined, mobile:boolean, cartId: number | undefined, isAuthenticated: any, isReviewLeft: boolean, submitReview: any, addToCart: any}> = (props) => {
 
     function reviewRender() {
         if(props.isAuthenticated && !props.isReviewLeft) {
@@ -44,7 +44,10 @@ export const CheckoutAndReviewBox:React.FC<{ product:ProductModel | undefined, m
                         </p>
                     </div>
                 </div>
-                <Link to='/#' className='btn btn-success btn-lg'>Sign in</Link>
+                {/* <Link to='/#' className='btn btn-success btn-lg'>Sign in</Link> */}
+                <Link type='button' onClick={props.addToCart} className='btn btn-success btn-lg'
+                                to={`/cart/${props.cartId}`}>AddToCart
+                            </Link>
                 <hr />
                 <p className='mt-3'>
                     This number can change until placing order has been complete.

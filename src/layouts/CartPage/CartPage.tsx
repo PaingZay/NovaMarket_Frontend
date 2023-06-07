@@ -277,7 +277,7 @@ export const CartPage = () => {
             <h5 className="card-title">Cart Summary</h5>
             <p className="card-text">Total Items: 3</p>
             <p className="card-text">Total Price: ${total}</p>
-            <a href="#" className="btn btn-primary btn-checkout">Checkout</a>
+            <a href="#" className='btn btn-success btn-lg'>Checkout</a>
           </div>
         </div>
       </div>

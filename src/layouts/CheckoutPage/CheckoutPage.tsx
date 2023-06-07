@@ -10,6 +10,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import CartModel from "../../Models/CartModel";
 import CartItemModel from "../../Models/CartItemModel";
 import ReviewRequestModel from "../../Models/ReviewRequestModel";
+import { Link } from "react-router-dom";
 
 
 export const CheckoutPage = () => {
@@ -540,14 +541,13 @@ async function addToCart() {
                     </div>
                     <div className="col-4 col-md-4 container">
                         <div className="ml-2">
-                            <button type="button" onClick={addToCart}>Add To Cart</button>
                             <h2>{product?.productName}</h2>
                             <h5 className="text-primary">{product?.sku}</h5>
                             <p className="lead">{product?.description}</p>
                             <StarsReview rating={totalStars} size={25}/>
                         </div>
                     </div>
-                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.id} isAuthenticated={authState?.isAuthenticated} isReviewLeft={isReviewLeft} submitReview={submitReview}/>    
+                    <CheckoutAndReviewBox product={product} mobile={false} cartId={cart?.id} isAuthenticated={authState?.isAuthenticated} isReviewLeft={isReviewLeft} submitReview={submitReview} addToCart={addToCart}/>    
                 </div>
                 <hr />
                 
@@ -573,7 +573,7 @@ async function addToCart() {
                         <StarsReview rating={totalStars} size={32}/>
                     </div>
                 </div>
-                <CheckoutAndReviewBox product={product} mobile={true} cartId={cart?.id} isAuthenticated={authState?.isAuthenticated} isReviewLeft={isReviewLeft} submitReview={submitReview}/>
+                <CheckoutAndReviewBox product={product} mobile={true} cartId={cart?.id} isAuthenticated={authState?.isAuthenticated} isReviewLeft={isReviewLeft} submitReview={submitReview} addToCart={addToCart}/>
                 <hr />
                 <LatestReviews reviews={reviews} productId={product?.id} mobile={true} />
             </div>

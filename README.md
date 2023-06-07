@@ -1,46 +1,58 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+# Project Introduction
+This project is an e-commerce website that aims to provide a user-friendly online shopping experience for customers. It allows users to browse through products, view detailed information, add items to their cart, and proceed to checkout for a secure and convenient purchase.
 
-In the project directory, you can run:
+The website consists of both client and admin sides. On the client side, customers can explore the product catalog, search for specific items, and interact with the shopping cart functionality to manage their purchases. They can also create accounts, sign in, and access personalized features such as saved preferences and order history.
 
-### `npm start`
+On the admin side, administrators have access to tools and functionalities for managing the e-commerce business. They can add new products, update information, manage inventory, and process customer orders. This ensures efficient order fulfillment and a smooth customer experience.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Project Status
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+This project is currently in development as the frontend for the NovaMarket e-commerce website. Users can browse the product catalog, search by keywords and categories, view detailed product information, read and leave reviews, and add items to their cart for purchase. The application offers a user-friendly experience, allowing customers to easily find and review products. Please note that this project is under development, and more features will be added in the future.
+## Installation:
+Make sure you have Node.js and npm (Node Package Manager) installed on your machine. You can download and install them from the official Node.js website: https://nodejs.org
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Clone the repository by running the following command in your terminal or command prompt:
+```bash
+  git clone https://github.com/PaingZay/NovaMarket.git
+```
 
-### `npm run build`
+Once the cloning process is complete, navigate to the project directory:
+```bash
+  cd NovaMarket_Frontend
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Install the project dependencies by running the following command:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+  npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Start the server
 
-### `npm run eject`
+```bash
+  npm run start
+```
+## Acknowledgements
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+ - [Full Stack: React and Java Spring Boot - The Developer Guide](https://www.udemy.com/course/full-stack-react-and-java-spring-boot-the-developer-guide/)
+ - [The Complete JavaScript Course 2023: From Zero to Expert](https://www.udemy.com/course/the-complete-javascript-course/)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Reflection
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+During my two-month testing internship, I embarked on a project to develop an e-commerce website, driven by my growing passion for programming. While my internship initially focused on Quality Assurance, I realized my strong inclination towards pure programming and decided to enhance my web development skills through this project.
 
-## Learn More
+To begin, I devoted time to designing a robust database for the project, drawing from my previous experience leading academic group projects and collaborating within web development teams. Additionally, I delved into various frontend frameworks, selecting the most suitable one for the task at hand.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Choosing to build an e-commerce website presented an exciting challenge, allowing me to expand my skill set. One notable hurdle was creating the Spring Boot application. While the Udemy instructor advocated for a simple REST API with Spring Data Rest, I recognized its limitations for complex projects and opted for a different approach. Consequently, I took full responsibility for resolving program errors, sometimes spending days to troubleshoot and fix issues. This experience significantly improved my ability to identify and address problems efficiently.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+After completing the backend Spring Boot development, I shifted my focus to building the React frontend. This phase brought forth its own set of challenges, as I learned and applied concepts in real-time. Implementing React demanded perseverance and problem-solving skills, but the process allowed me to gain valuable hands-on experience and become proficient in a short period.
+
+Throughout this project, I've come to understand the importance of mastering essential technologies. Currently, I am focusing on honing my skills in JavaScript and Redux, as they play crucial roles in driving the project forward.
+
+
+
+

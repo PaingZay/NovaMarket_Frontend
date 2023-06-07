@@ -26,13 +26,13 @@ export const Cart:React.FC<{ cart:CartModel | undefined, cartItem: CartItemModel
                 {props.cartItem?.product.productName}
             </td>
             <td className="price">${props.cartItem?.pricePerUnit}</td>
-            <td><button onClick={() => props.decreaseQuantity(props.cartItem?.product.id)}>-</button></td>
+            <td><button className="btn main-color btn-lg text-white" onClick={() => props.decreaseQuantity(props.cartItem?.product.id)}>-</button></td>
             {/* <button onClick={() => {
                 props.decreaseQuantity();
                 props.calculateTotal();
             }}>-</button> */}
             <td>{props.cartItem?.quantity}</td>
-            <td><button onClick={() => props.increaseQuantity(props.cartItem?.product.id)}>+</button></td>
+            <td><button className="btn main-color btn-lg text-white" onClick={() => props.increaseQuantity(props.cartItem?.product.id)}>+</button></td>
             {/* <button onClick={() => {
                 props.increaseQuantity();
                 props.calculateTotal();
