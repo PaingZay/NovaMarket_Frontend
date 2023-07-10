@@ -8,7 +8,8 @@ import CartItemModel from "../../Models/CartItemModel";
 import { Cart } from "./Components/Cart";
 import ProductModel from "../../Models/ProductModel";
 import CustomerModel from "../../Models/CustomerModel";
-// import './styles.css';
+import "./styles.scss";
+import { Summary } from "./Components/Summary";
 
 export const CartPage = () => {
 
@@ -211,27 +212,27 @@ export const CartPage = () => {
     setIsLoadingUpdatedStatus(false);
   }
 
-  //CALCULATE SUBTOTAL
-  // async function calculateTotal() {
-  //   const url = `http://localhost:8081/api/cart/items/secure/total`;
-  //   const requestOptions = {
-  //     method: 'PUT',
-  //     headers: {
-  //       Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   };
-  //   const updateResponse = await fetch(url, requestOptions);
-  //   console.log("UpdateResponse" + updateResponse);
-  //   if (!updateResponse.ok) {
-  //     throw new Error('Something went wrong!');
-  //   }
-  //   const responseData = await updateResponse.json();
-  //   console.log("ResponseData" + responseData);
-  //   setQuantityChanges(quantityChanges + 1);
-  //   setIsLoadingUpdatedStatus(false);
-  //   setTotal(responseData);
-  // }
+  // CALCULATE SUBTOTAL
+  async function calculateTotal() {
+    const url = `http://localhost:8081/api/cart/items/secure/total`;
+    const requestOptions = {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    };
+    const updateResponse = await fetch(url, requestOptions);
+    console.log("UpdateResponse" + updateResponse);
+    if (!updateResponse.ok) {
+      throw new Error('Something went wrong!');
+    }
+    const responseData = await updateResponse.json();
+    console.log("ResponseData" + responseData);
+    setQuantityChanges(quantityChanges + 1);
+    setIsLoadingUpdatedStatus(false);
+    setTotal(responseData);
+  }
 
   if (isLoadingCart || isLoadingCartItem) {
     return (
@@ -252,35 +253,27 @@ export const CartPage = () => {
 
 
   return (
-    <div>
-      <div className="container">
-        <h1>Shopping Cart</h1>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Subtotal</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className="container mt-5 mb-5">
+            <h1>Shopping Cart</h1>
+
+            <div className="shopping-cart">
+
+            <div className="column-labels">
+                <label className="product-image">Image</label>
+                <label className="product-details">Product</label>
+                <label className="product-price">Price</label>
+                <label className="product-quantity">Quantity</label>
+                <label className="product-removal">Remove</label>
+                <label className="product-line-price">Total</label>
+            </div>        
+
             {cartItems.map(cartItem => (
-              <Cart cart={cart} cartItem={cartItem} mobile={false} quantityChanges={quantityChanges} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity}></Cart>
+              <Cart cart={cart} cartItem={cartItem} mobile={false} quantityChanges={quantityChanges} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} calculateTotal={calculateTotal} ></Cart>
             ))
             }
-          </tbody>
-        </table>
-        <div className="card">
-          <div className="card-body">
-            <h5 className="card-title">Cart Summary</h5>
-            <p className="card-text">Total Items: 3</p>
-            <p className="card-text">Total Price: ${total}</p>
-            <a href="#" className='btn btn-success btn-lg'>Checkout</a>
-          </div>
-        </div>
+
+            <Summary total={total}/>
       </div>
-    </div>
+      </div>
   );
 }

@@ -39,7 +39,7 @@ export const CheckoutPage = () => {
     const [isLoadingUser, setIsLoadingUser] = useState(true);
 
     //Review State
-    const [reviews, setReviews] = useState<ReviewModel[]>([]);
+    const [reviews , setReviews] = useState<ReviewModel[]>([]);
     const [totalStars, setTotalStars] = useState(0);
     const [isLoadingReviews, setIsLoadingReviews] = useState(true);
 

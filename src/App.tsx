@@ -12,7 +12,8 @@ import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
 import LoginWidget from './Auth/LoginWidget';
 import { CartPage } from './layouts/CartPage/CartPage';
 import { ReviewListPage } from './layouts/CheckoutPage/ReviewListPage/ReviewListPage';
-
+import { GameListingPage } from './layouts/CheckoutPage/GameListing/GameListingPage';
+import { RegistrationPage } from './layouts/Registration/RegistrationPage';
 const oktaAuth = new OktaAuth(oktaConfig);
 
 //Udemy
@@ -52,6 +53,12 @@ export const App = () => {
     <Route path='/cart/:cartId'>
       <CartPage/>
     </Route>
+    <Route path='/trade/games'>
+      <GameListingPage/>
+    </Route>
+    <Route path='/register/trader'>
+      <RegistrationPage/>
+    </Route>
     <Route path='/login' render={
             () => <LoginWidget config={oktaConfig} /> 
             } 
@@ -64,16 +71,3 @@ export const App = () => {
     </div>
   );
 }
-
-//Angela
-// function App() {
-//   return (
-//     <div>
-//     <Navbar/>
-//     <HomePage/>
-//     <Footer/>
-//     </div>
-//   );
-// }
-
-// export default App;

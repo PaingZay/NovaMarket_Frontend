@@ -134,6 +134,7 @@ function SearchProductPage(){
             value.toLowerCase() === 'snezhnaya'
         ) {
             setCategorySelection(value);
+            console.log("Printed Value" + value);
             setSearchUrl(`/category/${value}?pageNumber=<pgn>&pageSize=${productsPerPage}`)
         } else {
             setCategorySelection('All');

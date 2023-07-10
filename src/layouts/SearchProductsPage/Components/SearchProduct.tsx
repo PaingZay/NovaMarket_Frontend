@@ -58,9 +58,10 @@ export const SearchProduct: React.FC<{ product: ProductModel }> = (props) => {
                 </div>
                 <div className='col-md-4 d-flex justify-content-center align-items-center'>
                     {/* Got to checkout page by passing the product Id from the current search product page */}
-                    <Link className='btn btn-md main-color text-white' href='#' to={`/checkout/${props.product.id}`}>
-                        View Details
+                    <Link className='' href='#' to={`/checkout/${props.product.id}`}>
+                    <button className="custom-btn btn-3"><span>Read More</span></button>
                     </Link>
+                    
                 </div>
             </div>
         </div>
